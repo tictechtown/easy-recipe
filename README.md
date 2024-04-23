@@ -23,4 +23,4 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Deploy
 
-This project runs on Vercel and you can try a demo [here](https://easy-recipe-zu8.pages.dev/)
+This project runs on Vercel and you can try a demo [here](https://easy-recipe-rho.vercel.app/)
