@@ -20,3 +20,7 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## Deploy
+
+This project runs on Cloudflare and you can try a demo [here](https://easy-recipe-zu8.pages.dev/)
