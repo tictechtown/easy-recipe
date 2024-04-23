@@ -25,11 +25,12 @@ export default function Clock(props: Props) {
   useEffect(() => {
     const timeOutId = setInterval(() => {
       if (endTimerTimestamp - Date.now() >= 0) {
-        setDurationLeft(() => endTimerTimestamp - Date.now());
+        setDurationLeft(endTimerTimestamp - Date.now());
       } else {
+        setDurationLeft(0);
         clearInterval(timeOutId);
       }
-    }, 1000);
+    }, 250);
 
     return () => {
       clearInterval(timeOutId);
@@ -48,9 +49,9 @@ export default function Clock(props: Props) {
   );
 
   return (
-    <div className="flex flex-row gap-4 items-center">
+    <div className="flex flex-row gap-4 items-center prose">
       <div
-        className="radial-progress"
+        className="radial-progress text-primary"
         style={
           {
             "--value": value,

@@ -8,6 +8,7 @@ import {
   parseRecipeImage,
   round5,
 } from "../lib/utils";
+import AddTimerButton from "./recipe-components/add-timer-btn";
 import Clock from "./recipe-components/clock";
 import Ingredient from "./recipe-components/ingredient";
 import RecipeInstructions from "./recipe-components/instructions";
@@ -60,10 +61,10 @@ export default function Recipe({ data, onDelete }: Props) {
     setMultiplier(+e.target.value / recipeYield);
   };
 
-  const handleAddTimer = () => {
+  const handleAddTimer = (stepName: string, durationInMS: number) => {
     setTimers((prev) => [
       ...prev,
-      { name: "New Timer", start: Date.now(), end: Date.now() + 1000 * 2 * 60 },
+      { name: stepName, start: Date.now(), end: Date.now() + durationInMS },
     ]);
   };
 
@@ -74,7 +75,7 @@ export default function Recipe({ data, onDelete }: Props) {
     // TODO - quick and dirty, we should process this better
     const duration = +(matchedValue.match(/\d+/) ?? "0");
     let unit = 1000;
-    if (matchedValue.includes("minute")) {
+    if (matchedValue.includes("min")) {
       unit = 1000 * 60;
     }
     if (matchedValue.includes("hour")) {
@@ -128,15 +129,15 @@ export default function Recipe({ data, onDelete }: Props) {
   const brandLogo = parseBrandLogo(data.publisher);
 
   return (
-    <div className="container flex flex-col gap-8 py-12 max-w-4xl  px-4 lg:px-0">
+    <div className="container flex flex-col gap-4 md:gap-8 py-12 max-w-4xl  px-4 lg:px-0">
       <img
         className="rounded-3xl max-h-96 object-cover"
         src={imageUrl}
         alt="cover image"
       />
 
-      <div className="flex flex-col md:flex-row gap-12 md:justify-between">
-        <div className="card bg-base-100  mx-4 sm:mx-0">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-12 md:justify-between">
+        <div className="card bg-base-100 card-compact">
           <div className="card-body">
             <h2 className="card-title text-5xl text-primary">{data.name}</h2>
             <Ratings
@@ -149,7 +150,7 @@ export default function Recipe({ data, onDelete }: Props) {
             />
 
             {!!data.description && <>{he.decode(data.description)}</>}
-            <div className="flex flex-row gap-2 *:cursor-pointer my-2">
+            <div className="flex flex-row gap-4 *:cursor-pointer my-2">
               {categories.map((cat) => (
                 <div key={cat} className="badge badge-ghost hover:scale-105">
                   {cat}
@@ -161,7 +162,7 @@ export default function Recipe({ data, onDelete }: Props) {
                 </div>
               ))}
             </div>
-            <a href={data.url}>
+            <a href={data.url} target="_blank">
               <div className="flex gap-4 items-center badge shadow hover:scale-105 cursor-pointer pointer-events-auto">
                 {brandLogo && (
                   <div className="avatar">
@@ -176,7 +177,7 @@ export default function Recipe({ data, onDelete }: Props) {
           </div>
         </div>
 
-        <div className="card bg-base-00 mx-4 sm:mx-0 card-bordered">
+        <div className="card bg-base-00 mx-2 sm:mx-0 card-bordered">
           <div className="card-body">
             <div className="stats stats-vertical">
               {includeTotalDuration && totalDuration.isValid && (
@@ -255,8 +256,8 @@ export default function Recipe({ data, onDelete }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-12 align-center">
-        <div className="card bg-base-200 mx-4 lg:mx-auto prose  sm:basis-2/5">
+      <div className="flex flex-col lg:flex-row gap-4 md:gap-12 align-center">
+        <div className="card bg-base-200 mx-2 lg:mx-auto prose  sm:basis-2/5">
           <div className="card-body ">
             <h2 className="card-title not-prose">Ingredients</h2>
             <div className="divider" />
@@ -272,7 +273,7 @@ export default function Recipe({ data, onDelete }: Props) {
           </div>
         </div>
 
-        <div className="card  bg-base-200  sm:basis-3/5 mx-4 lg:mx-auto prose">
+        <div className="card  bg-base-200  sm:basis-3/5 mx-2 lg:mx-auto prose">
           <div className="card-body">
             <h2 className="card-title not-prose">Steps</h2>
             <div className="divider" />
@@ -286,8 +287,8 @@ export default function Recipe({ data, onDelete }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-12">
-        <div className="card bg-base-200 xl:basis-1/3 mx-4 lg:mx-auto prose">
+      <div className="flex flex-col lg:flex-row gap-4 md:gap-12">
+        <div className="card bg-base-200 xl:basis-1/3 mx-2 lg:mx-auto prose">
           <div className="card-body">
             <h2 className="card-title not-prose">Nutritions</h2>
             <div className="divider" />
@@ -342,24 +343,23 @@ export default function Recipe({ data, onDelete }: Props) {
           </div>
         </div>
 
-        <div className="card  bg-base-100  basis-2/3 mx-4 sm:mx-0">
+        <div className="card  bg-base-100  basis-2/3 mx-2 sm:mx-0">
           <div className="card-body">
-            <h2 className="card-title">Clocks</h2>
+            <h2 className="card-title">Timers</h2>
             <div className="divider" />
-
-            {timers.map((timer) => {
-              return (
-                <Clock
-                  key={timer.name}
-                  name={timer.name}
-                  startTimerTimestamp={timer.start}
-                  endTimerTimestamp={timer.end}
-                />
-              );
-            })}
-            <button className="btn btn-secondary" onClick={handleAddTimer}>
-              Add Timer
-            </button>
+            <div className="flex flex-col gap-6">
+              {timers.map((timer) => {
+                return (
+                  <Clock
+                    key={timer.name}
+                    name={timer.name}
+                    startTimerTimestamp={timer.start}
+                    endTimerTimestamp={timer.end}
+                  />
+                );
+              })}
+              <AddTimerButton onClick={handleAddTimer} />
+            </div>
           </div>
         </div>
       </div>

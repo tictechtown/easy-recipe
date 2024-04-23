@@ -84,7 +84,7 @@ export default function Page() {
       <label className="input input-bordered flex items-center gap-2 m-4">
         <input
           type="text"
-          className="grow"
+          className="grow placeholder-gray-500"
           placeholder="Search a recipe"
           value={searchText}
           onChange={handleSearch}
