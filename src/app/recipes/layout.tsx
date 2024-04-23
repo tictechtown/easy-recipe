@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import fetchUrl from "../lib/fetchUrl";
 import { useRecipeListStore } from "../lib/localStore";
@@ -17,6 +18,7 @@ export default function Layout({
   const { importedRecipes, addRecipe, removeRecipe } = useRecipeListStore(
     (state) => state
   );
+  const pathname = usePathname();
 
   const [loading, setLoading] = useState(false);
 
@@ -38,8 +40,6 @@ export default function Layout({
     e.preventDefault();
     removeRecipe(rcp);
   };
-
-  console.log("params", params);
 
   return (
     <div className="drawer xl:drawer-open">
@@ -218,8 +218,8 @@ export default function Layout({
               <li key={rcp.id}>
                 <Link
                   href={`/recipes/${rcp.id}`}
-                  className={`flex flex-row justify-between ${
-                    rcp.id === params.id ? "active" : ""
+                  className={`group flex flex-row justify-between ${
+                    pathname === `/${rcp.id}`
                   }`}
                 >
                   {rcp.recipe.name}
@@ -228,7 +228,7 @@ export default function Layout({
                     onClick={(e) => handleRemoveRecipe(rcp, e)}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 448 512"
-                    className="h-4 w-4"
+                    className="h-4 w-4 hidden group-hover:block hover:scale-110"
                   >
                     <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
                   </svg>

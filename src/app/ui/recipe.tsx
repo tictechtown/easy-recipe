@@ -370,13 +370,16 @@ export default function Recipe({ data, onDelete }: Props) {
       >
         Delete
       </button>
-
-      <details className="collapse bg-base-200">
-        <summary className="collapse-title text-xl font-medium">Debug</summary>
-        <div className="collapse-content">
-          <p>{JSON.stringify(data)}</p>
-        </div>
-      </details>
+      {process.env.NODE_ENV === "development" && (
+        <details className="collapse bg-base-200">
+          <summary className="collapse-title text-xl font-medium">
+            Debug
+          </summary>
+          <div className="collapse-content">
+            <p>{JSON.stringify(data)}</p>
+          </div>
+        </details>
+      )}
     </div>
   );
 }

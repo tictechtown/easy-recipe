@@ -6,7 +6,8 @@ type Props = {
   onAddTimer: (stepNumber: number, txt: string) => void;
 };
 
-const regex = /\b(\d+(?:\.\d+)?)(?:\s*(minute|hour|day|week|month|year)s?)?\b/g;
+const regexValue =
+  /\b(\d+(?:\.\d+)?)(?:\s*)(min|mins|minute|minutes|hours|hour|days|day|weeks|week|months|month|years|year)\b/gm;
 
 function InstructionBlock({
   value,
@@ -17,8 +18,7 @@ function InstructionBlock({
   step: number;
   onAddTimer: (stepNumber: number, txt: string) => void;
 }) {
-  const matches = value.match(regex);
-  console.log("matches", matches);
+  const matches = value.match(regexValue);
   return (
     <>
       <li className="cs-step">{he.decode(value as string)}</li>

@@ -14,17 +14,25 @@ export const useRecipeListStore = create<RecipeListState>()(
     (set) => ({
       importedRecipes: [],
       addRecipe: (recipe: RecipeLD, url: string) =>
-        set((state) => ({
-          importedRecipes: [
-            {
-              recipe: { ...recipe, url },
-              id: slugify(recipe.name),
-              dateAdded: new Date(),
-              favorite: false,
-            },
-            ...state.importedRecipes,
-          ],
-        })),
+        set((state) => {
+          const newId = slugify(recipe.name);
+          const isPresent = state.importedRecipes.find((rc) => rc.id === newId);
+          if (isPresent) {
+            return state;
+          }
+
+          return {
+            importedRecipes: [
+              {
+                recipe: { ...recipe, url },
+                id: newId,
+                dateAdded: new Date(),
+                favorite: false,
+              },
+              ...state.importedRecipes,
+            ],
+          };
+        }),
       removeRecipe: (recipe: StoredRecipe) =>
         set((state) => ({
           importedRecipes: state.importedRecipes.filter(
