@@ -16,18 +16,60 @@
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@layer components {
+  .cs-step {
+    gap: 0.5rem;
+    grid-template-columns: 40px 1fr;
+    grid-template-rows: auto;
+    min-height: 2.5rem;
+    justify-items: start;
+  }
+
+  .steps .cs-step {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    grid-template-rows: 40px 1fr;
+    justify-content: flex-start;
+    align-items: baseline;
+    text-align: left;
+    min-width: 4rem;
+  }
+
+  .steps .cs-step:after {
+    content: counter(step);
+    counter-increment: step;
+    z-index: 1;
+    position: relative;
+    grid-column-start: 1;
+    grid-row-start: 1;
+    display: grid;
+    height: 2rem;
+    width: 2rem;
+    place-items: center;
+    align-self: baseline;
+    border-radius: 9999px;
+    --tw-bg-opacity: 1;
+    background-color: var(
+      --fallback-b3,
+      oklch(var(--b3) / var(--tw-bg-opacity))
+    );
+    --tw-text-opacity: 1;
+    color: var(--fallback-bc, oklch(var(--bc) / var(--tw-text-opacity)));
+  }
+
+  .cs-steps-vertical {
+    grid-auto-flow: row;
+  }
+
+  .cs-steps-vertical .cs-step {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    grid-template-rows: repeat(1, minmax(0, 1fr));
   }
 }
