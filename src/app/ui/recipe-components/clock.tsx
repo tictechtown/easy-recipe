@@ -51,9 +51,11 @@ export default function Clock(props: Props) {
     <div className="flex flex-row gap-4 items-center">
       <div
         className="radial-progress"
-        style={{
-          "--value": value,
-        }}
+        style={
+          {
+            "--value": value,
+          } as React.CSSProperties
+        }
         role="progressbar"
       >
         {displayedValue.toFormat("mm:ss")}

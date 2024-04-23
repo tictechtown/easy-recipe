@@ -31,7 +31,10 @@ export default function Layout({
     setLoading(false);
   };
 
-  const handleRemoveRecipe = (rcp: StoredRecipe, e: MouseEvent) => {
+  const handleRemoveRecipe = (
+    rcp: StoredRecipe,
+    e: React.MouseEvent<SVGSVGElement, MouseEvent>
+  ) => {
     e.preventDefault();
     removeRecipe(rcp);
   };
