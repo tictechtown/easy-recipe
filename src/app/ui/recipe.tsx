@@ -210,7 +210,7 @@ export default function Recipe({ data, onDelete }: Props) {
           </div>
         </div>
 
-        <div className="mx-2 card-bordered stats stats-horizontal md:stats-vertical">
+        <div className="mx-4 card-bordered stats stats-horizontal md:stats-vertical">
           {includeTotalDuration && totalDuration.isValid && (
             <div className="stat">
               <div className="stat-title text-md md:text-lg">Total Time</div>
@@ -285,8 +285,8 @@ export default function Recipe({ data, onDelete }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-4 md:gap-12 items-center lg:items-start	">
-        <div className="card card-compact sm:card-normal bg-base-200 mx-2 lg:mx-auto prose md:basis-2/5">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-2 lg:gap-12	">
+        <div className="card card-compact sm:card-normal bg-base-200 mx-4 lg:mx-auto prose md:basis-2/5">
           <div className="card-body ">
             <h2 className="card-title not-prose">Ingredients</h2>
             <div className="divider hidden sm:flex" />
@@ -300,7 +300,7 @@ export default function Recipe({ data, onDelete }: Props) {
           </div>
         </div>
 
-        <div className="card card-compact sm:card-normal bg-base-200  sm:basis-3/5 mx-2 lg:mx-auto prose">
+        <div className="card card-compact sm:card-normal bg-base-200  sm:basis-3/5 mx-4 lg:mx-auto prose">
           <div className="card-body">
             <h2 className="card-title not-prose">Steps</h2>
             <div className="divider hidden sm:flex" />
@@ -314,8 +314,8 @@ export default function Recipe({ data, onDelete }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 lg:gap-12 items-center md:items-start">
-        <div className="card card-compact sm:card-normal bg-base-200 xl:basis-1/3 mx-2 lg:mx-auto prose flex-1 w-100">
+      <div className="flex flex-col md:flex-row gap-4 md:justify-between">
+        <div className="card card-compact sm:card-normal bg-base-200 xl:basis-1/3 mx-4 lg:mx-0 prose">
           <div className="card-body">
             <h2 className="card-title not-prose">Nutritions</h2>
             <div className="divider hidden sm:flex" />
@@ -370,7 +370,7 @@ export default function Recipe({ data, onDelete }: Props) {
           </div>
         </div>
 
-        <div className="card card-compact sm:card-normal  bg-base-100  xl:basis-2/3 mx-2 lg:mx-auto flex-">
+        <div className="card card-compact card-bordered sm:card-normal  bg-base-100  xl:basis-2/3 mx-4 lg:mx-0">
           <div className="card-body">
             <h2 className="card-title">Timers</h2>
             <div className="divider hidden sm:flex" />
@@ -392,7 +392,7 @@ export default function Recipe({ data, onDelete }: Props) {
       </div>
 
       <button
-        className="btn btn-outline btn-error"
+        className="btn btn-outline btn-error mx-4 lg:mx-0"
         onClick={() => onDelete(data)}
       >
         Delete
