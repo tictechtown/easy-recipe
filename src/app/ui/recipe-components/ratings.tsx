@@ -7,8 +7,8 @@ export default function Ratings(props: Props) {
   const { ratingValue, ratingCount } = props;
 
   return (
-    <div className="flex flex-row gap-2 justify-content">
-      <div className="rating rating-md rating-half">
+    <div className="flex flex-row gap-2 items-center">
+      <div className="rating rating-sm sm:rating-md rating-half">
         <input
           type="radio"
           name="rating-10"
@@ -85,7 +85,7 @@ export default function Ratings(props: Props) {
           checked={ratingValue == 50}
         />
       </div>
-      ({ratingCount})
+      <span>({ratingCount})</span>
     </div>
   );
 }

@@ -29,20 +29,38 @@ export default function Home() {
 
   return (
     <main className="hero min-h-screen bg-base-200">
-      <div className="hero-content text-center">
+      <div className="hero-content text-center prose">
         <div className="max-w-4xl">
-          <h1 className="text-5xl font-bold">Welcome to EasyRecipe</h1>
-          <p className="py-6">Start by adding a recipe URL</p>
-          <div>
+          <div className="text-primary flex align-center justify-center animate-fade-in-move-down">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-24 h-24"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                fillRule="evenodd"
+                d="M7.253 4.255a5.25 5.25 0 0 1 9.494 0A5.75 5.75 0 0 1 19.75 15.05v3.002c0 .899 0 1.648-.08 2.242c-.084.628-.27 1.195-.726 1.65c-.455.456-1.022.642-1.65.726c-.594.08-1.344.08-2.242.08H8.948c-.898 0-1.648 0-2.242-.08c-.628-.084-1.195-.27-1.65-.726c-.456-.455-.642-1.022-.726-1.65c-.08-.594-.08-1.343-.08-2.242v-3.001A5.75 5.75 0 0 1 7.253 4.256m-.45 1.5A4.25 4.25 0 0 0 5.3 13.897a.75.75 0 0 1 .45.687V18c0 .964.002 1.612.067 2.095c.062.461.169.659.3.789c.13.13.327.237.788.3c.483.064 1.131.066 2.095.066h6c.964 0 1.612-.002 2.095-.067c.461-.062.659-.169.789-.3c.13-.13.237-.327.3-.788c.064-.483.066-1.131.066-2.095v-3.416a.75.75 0 0 1 .45-.687a4.251 4.251 0 0 0-1.503-8.142c.035.243.053.492.053.745V7a.75.75 0 0 1-1.5 0v-.5A3.746 3.746 0 0 0 12 2.75A3.752 3.752 0 0 0 8.25 6.5V7a.75.75 0 0 1-1.5 0v-.5c0-.253.018-.502.053-.745M8.25 18a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+          <h1 className="text-5xl text-primary font-bold animate-fade-in-move-down">
+            Welcome to EasyRecipe
+          </h1>
+          <p className="animate-fade-in-move-down animation-mode-backward animation-delay-200">
+            Start by adding a recipe URL
+          </p>
+          <div className="join animate-fade-in-move-down animation-mode-backward animation-delay-500 flex flex-row w-full">
             <input
               type="text"
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="https://"
-              className="input input-bordered w-full max-w-xs"
+              className="join-item input input-bordered rounded-l-full flex basis-4/5"
             />
             <button
-              className="btn btn-primary ml-4"
+              className="btn btn-primary join-item rounded-r-full "
               onClick={handleRecipeImport}
             >
               {loading && <span className="loading loading-spinner"></span>}

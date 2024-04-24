@@ -4,24 +4,23 @@ import { ChangeEvent, useMemo, useState } from "react";
 import fetchUrl from "../lib/fetchUrl";
 import { useRecipeListStore } from "../lib/localStore";
 import parseHtmlString from "../lib/parseHtmlString";
+import EmptyCollection from "../ui/empty-collection";
 import GridRecipe from "../ui/grid-recipe";
 
 export default function Page() {
   const { importedRecipes, addRecipe } = useRecipeListStore((state) => state);
 
   const [searchText, setSearchText] = useState("");
-  const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleRecipeImport = async () => {
-    setLoading(true);
+  const handleRecipeImport = async (text: string) => {
     const htmlString = await fetchUrl(text);
     const recipe = parseHtmlString(htmlString);
     if (recipe) {
       // add to list
       addRecipe(recipe, text);
+      return true;
     }
-    setLoading(false);
+    return false;
   };
 
   const handleSearch = (e: ChangeEvent<any>) => {
@@ -49,38 +48,14 @@ export default function Page() {
 
   if (importedRecipes.length === 0) {
     return (
-      <div className="container flex flex-col gap-2  h-screen  max-w-4xl py-12 px-4 lg:px-0 ">
-        <h3 className="font-bold text-lg">Add a recipe URL</h3>
-        <div className="flex flex-row gap-8">
-          <input
-            type="text"
-            value={text}
-            placeholder="https://"
-            className="input input-bordered basis-4/5"
-            onChange={(e) => setText(e.target.value)}
-          />
-
-          {loading ? (
-            <button className="btn basis-1/5">
-              <span className="loading loading-spinner"></span>
-              loading
-            </button>
-          ) : (
-            <button
-              disabled={!text}
-              className="btn btn-primary basis-1/5"
-              onClick={handleRecipeImport}
-            >
-              Import
-            </button>
-          )}
-        </div>
+      <div className="container flex flex-col align-center h-screen gap-8 max-w-4xl py-12 px-4 lg:px-0 prose">
+        <EmptyCollection onImport={handleRecipeImport} />
       </div>
     );
   }
 
   return (
-    <div className="container flex flex-col gap-8  h-screen  max-w-4xl py-12 px-4 lg:px-0">
+    <div className="container flex flex-col gap-8 flex-1 max-w-4xl py-12 px-4 lg:px-0">
       <label className="input input-bordered flex items-center gap-2 m-4">
         <input
           type="text"
@@ -103,7 +78,7 @@ export default function Page() {
         </svg>
       </label>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {filteredRecipes.map((rcp) => (
           <Link key={rcp.id} href={`/recipes/${rcp.id}`}>
             <GridRecipe data={rcp} />

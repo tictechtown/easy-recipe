@@ -24,13 +24,19 @@ export default function Layout({
 
   const handleRecipeImport = async (url: string) => {
     setLoading(true);
-    const htmlString = await fetchUrl(url);
-    const recipe = parseHtmlString(htmlString);
-    if (recipe) {
-      // add to list
-      addRecipe(recipe, url);
+    try {
+      const htmlString = await fetchUrl(url);
+      const recipe = parseHtmlString(htmlString);
+      if (recipe) {
+        // add to list
+        addRecipe(recipe, url);
+      }
+      setLoading(false);
+      return !!recipe;
+    } catch {
+      setLoading(false);
+      return false;
     }
-    setLoading(false);
   };
 
   const handleRemoveRecipe = (
@@ -43,13 +49,13 @@ export default function Layout({
 
   return (
     <div className="drawer xl:drawer-open">
-      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+      <input id="drawer-nav" type="checkbox" className="drawer-toggle" />
 
       <div className="drawer-content flex flex-col items-center justify-center">
         <div className="navbar bg-base-100">
           <label
             aria-label="Open menu"
-            htmlFor="my-drawer-2"
+            htmlFor="drawer-nav"
             className="btn btn-square btn-ghost drawer-button xl:hidden "
           >
             <svg
@@ -166,7 +172,7 @@ export default function Layout({
 
       <div className="drawer-side">
         <label
-          htmlFor="my-drawer-2"
+          htmlFor="drawer-nav"
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
