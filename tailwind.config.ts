@@ -11,11 +11,11 @@ const config: Config = {
       keyframes: {
         "fade-in-move-down": {
           "0%": {
-            opacity: 0,
+            opacity: "0",
             transform: "translateY(-3rem)",
           },
           "100%": {
-            opacity: 1,
+            opacity: "1",
             transform: "translateY(0)",
           },
         },
