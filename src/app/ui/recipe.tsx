@@ -131,7 +131,7 @@ export default function Recipe({ data, onDelete }: Props) {
   const brandLogo = parseBrandLogo(data.publisher);
 
   return (
-    <div className="container flex flex-col gap-4 md:gap-8 py-4 md:py-8 max-w-4xl">
+    <div className="container flex flex-col gap-4 md:gap-8 py-4 md:py-8 max-w-4xl animate-fade-in-move-down">
       <img
         className="rounded-3xl max-h-96 object-cover  px-2 lg:px-0"
         src={imageUrl}
