@@ -1,5 +1,6 @@
-import { HowToLD, HowToSectionLD, RecipeLD } from "@/app/lib/types";
+import { HowToLD, HowToSectionLD, RecipeLD } from "@/types";
 import he from "he";
+import { useState } from "react";
 
 type Props = {
   instructions: RecipeLD["recipeInstructions"];
@@ -18,16 +19,26 @@ function InstructionBlock({
   step: number;
   onAddTimer: (stepNumber: number, txt: string) => void;
 }) {
+  const [isCompleted, setIsCompleted] = useState(false);
+  const handleIsCompleted = () => {
+    setIsCompleted((prev) => !prev);
+  };
+
   const matches = value.match(regexValue);
   return (
     <>
-      <li className="cs-step">{he.decode(value as string)}</li>
+      <li
+        className={`cs-step rounded hover:bg-base-300 ${isCompleted && "opacity-30"} cursor-pointer`}
+        onClick={handleIsCompleted}
+      >
+        {he.decode(value as string)}
+      </li>
       {matches && matches?.length > 0 && (
         <div className="ml-12 flex flex-row gap-2">
           {matches?.map((match, index) => (
             <span
               key={match + index}
-              className="badge cursor-pointer"
+              className="badge-base-300 badge cursor-pointer shadow"
               onClick={() => onAddTimer(step, match)}
             >
               <svg

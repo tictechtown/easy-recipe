@@ -1,9 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import fetchUrl from "./lib/fetchUrl";
-import { useRecipeListStore } from "./lib/localStore";
-import parseHtmlString from "./lib/parseHtmlString";
+import fetchUrl from "../lib/fetchUrl";
+import parseHtmlString from "../lib/parseHtmlString";
+import { useRecipeListStore } from "../store/localStore";
 
 export default function Home() {
   const router = useRouter();
@@ -29,12 +29,12 @@ export default function Home() {
 
   return (
     <main className="hero min-h-screen bg-base-200">
-      <div className="hero-content text-center prose">
+      <div className="prose hero-content text-center">
         <div className="max-w-4xl">
-          <div className="text-primary flex align-center justify-center animate-fade-in-move-down">
+          <div className="align-center flex animate-fade-in-move-down justify-center text-primary">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-24 h-24"
+              className="h-24 w-24"
               viewBox="0 0 24 24"
             >
               <path
@@ -45,19 +45,19 @@ export default function Home() {
               />
             </svg>
           </div>
-          <h1 className="text-5xl text-primary font-bold animate-fade-in-move-down">
+          <h1 className="animate-fade-in-move-down text-5xl font-bold text-primary">
             Welcome to EasyRecipe
           </h1>
-          <p className="animate-fade-in-move-down animation-mode-backward animation-delay-200">
+          <p className="animation-mode-backward animation-delay-200 animate-fade-in-move-down">
             Start by adding a recipe URL
           </p>
-          <div className="join animate-fade-in-move-down animation-mode-backward animation-delay-500 flex flex-row w-full">
+          <div className="animation-mode-backward animation-delay-500 join flex w-full animate-fade-in-move-down flex-row">
             <input
               type="text"
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="https://"
-              className="join-item input input-bordered rounded-l-full flex basis-4/5"
+              className="focus-ring input join-item input-bordered flex basis-4/5 rounded-l-full"
             />
             <button
               className="btn btn-primary join-item rounded-r-full "

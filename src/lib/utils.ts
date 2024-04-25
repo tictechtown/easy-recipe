@@ -1,5 +1,6 @@
+import { Duration } from "luxon";
 import { parseIngredient } from "parse-ingredient";
-import { ImageLD, RecipeLD } from "./types";
+import { ImageLD, RecipeLD } from "../types";
 
 export function round5(x: number) {
   return Math.ceil(x / 5) * 5;
@@ -69,4 +70,13 @@ export function parseBrandLogo(
   }
 
   return logo?.url ?? null;
+}
+
+export function isTimerValid(
+  timerName: string,
+  timerDuration: string,
+): boolean {
+  const duration = Duration.fromISOTime(timerDuration);
+
+  return timerName !== "" && duration.isValid && duration.toMillis() > 1000;
 }

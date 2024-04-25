@@ -85,7 +85,7 @@ export default function Ratings(props: Props) {
           checked={ratingValue == 50}
         />
       </div>
-      <span>({ratingCount})</span>
+      <span className="self-end">({ratingCount})</span>
     </div>
   );
 }

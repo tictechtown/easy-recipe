@@ -1,7 +1,6 @@
 import he from "he";
 import { Duration } from "luxon";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
-import { RecipeLD } from "../lib/types";
 import {
   parseBrandLogo,
   parseBrandName,
@@ -9,11 +8,12 @@ import {
   parseRecipeYield,
   round5,
 } from "../lib/utils";
-import AddTimerButton from "./recipe-components/add-timer-btn";
-import Clock from "./recipe-components/clock";
-import Ingredient from "./recipe-components/ingredient";
-import RecipeInstructions from "./recipe-components/instructions";
-import Ratings from "./recipe-components/ratings";
+import { RecipeLD } from "../types";
+import AddTimerButton from "./recipes/add-timer-btn";
+import Clock from "./recipes/clock";
+import Ingredient from "./recipes/ingredient";
+import RecipeInstructions from "./recipes/instructions";
+import Ratings from "./recipes/ratings";
 
 type Props = {
   data: RecipeLD;
@@ -34,6 +34,12 @@ export default function Recipe({ data, onDelete }: Props) {
 
   const handleShowStepper = () => {
     setShowStepper((prev) => !prev);
+  };
+
+  const handleForceShowStepper = () => {
+    if (!showStepper) {
+      setShowStepper(() => true);
+    }
   };
 
   const handleKeyDown = (event: KeyboardEvent<any>) => {
@@ -60,6 +66,10 @@ export default function Recipe({ data, onDelete }: Props) {
 
   const handleMultiplierChange = (e: ChangeEvent<any>) => {
     setMultiplier(+e.target.value / recipeYield);
+  };
+
+  const handleMultiplierBlur = () => {
+    setShowStepper(false);
   };
 
   const handleAddTimer = (stepName: string, durationInMS: number) => {
@@ -162,12 +172,18 @@ export default function Recipe({ data, onDelete }: Props) {
               {!!data.description && <>{he.decode(data.description)}</>}
               <div className="my-1 flex flex-row gap-2 *:cursor-pointer">
                 {categories.map((cat) => (
-                  <div key={cat} className="badge badge-ghost hover:scale-105">
+                  <div
+                    key={cat}
+                    className="badge bg-base-300 shadow hover:scale-105"
+                  >
                     {cat}
                   </div>
                 ))}
                 {cuisines.map((cuis) => (
-                  <div key={cuis} className="badge badge-ghost hover:scale-105">
+                  <div
+                    key={cuis}
+                    className="badge bg-base-300 shadow hover:scale-105"
+                  >
                     {cuis}
                   </div>
                 ))}
@@ -194,7 +210,7 @@ export default function Recipe({ data, onDelete }: Props) {
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <g id="Interface / External_Link">
+                    <g>
                       <path
                         id="Vector"
                         d="M10.0002 5H8.2002C7.08009 5 6.51962 5 6.0918 5.21799C5.71547 5.40973 5.40973 5.71547 5.21799 6.0918C5 6.51962 5 7.08009 5 8.2002V15.8002C5 16.9203 5 17.4801 5.21799 17.9079C5.40973 18.2842 5.71547 18.5905 6.0918 18.7822C6.5192 19 7.07899 19 8.19691 19H15.8031C16.921 19 17.48 19 17.9074 18.7822C18.2837 18.5905 18.5905 18.2839 18.7822 17.9076C19 17.4802 19 16.921 19 15.8031V14M20 9V4M20 4H15M20 4L13 11"
@@ -250,15 +266,19 @@ export default function Recipe({ data, onDelete }: Props) {
 
           <div className="stat">
             <div className="text-md stat-title md:text-lg">Yield</div>
-            <div className="stat-value text-2xl md:text-3xl">
+            <div
+              className="stat-value text-2xl md:text-3xl"
+              onClick={handleForceShowStepper}
+            >
               {showStepper ? (
                 <input
                   type="number"
                   min={1}
                   placeholder={`${recipeYield}`}
-                  className="input w-full max-w-xs"
+                  className="focus-ring input w-16"
                   onKeyDown={handleKeyDown}
                   onChange={handleMultiplierChange}
+                  onBlur={handleMultiplierBlur}
                 />
               ) : (
                 <span>{recipeYield * multiplier}</span>
@@ -290,7 +310,6 @@ export default function Recipe({ data, onDelete }: Props) {
         <div className="prose card card-compact mx-4 bg-base-200 sm:card-normal md:basis-2/5 lg:mx-auto">
           <div className="card-body ">
             <h2 className="not-prose card-title">Ingredients</h2>
-            <div className="divider hidden sm:flex" />
             <ul className="my-0 sm:my-1">
               {recipeIngredient.map((rI, index) => (
                 <li key={index + 1}>
@@ -304,7 +323,6 @@ export default function Recipe({ data, onDelete }: Props) {
         <div className="prose card card-compact mx-4  bg-base-200 sm:card-normal sm:basis-3/5 lg:mx-auto">
           <div className="card-body">
             <h2 className="not-prose card-title">Steps</h2>
-            <div className="divider hidden sm:flex" />
             {data.recipeInstructions && (
               <RecipeInstructions
                 instructions={data.recipeInstructions}
@@ -319,7 +337,6 @@ export default function Recipe({ data, onDelete }: Props) {
         <div className="prose card card-compact mx-4 bg-base-200 sm:card-normal lg:mx-0 xl:basis-1/3">
           <div className="card-body">
             <h2 className="not-prose card-title">Nutritions</h2>
-            <div className="divider hidden sm:flex" />
             {data.nutrition && (
               <div className="overflow-x-auto">
                 <table className="table">
@@ -374,7 +391,6 @@ export default function Recipe({ data, onDelete }: Props) {
         <div className="card card-bordered card-compact mx-4  bg-base-100  sm:card-normal lg:mx-0 xl:basis-2/3">
           <div className="card-body">
             <h2 className="card-title">Timers</h2>
-            <div className="divider hidden sm:flex" />
             <div className="flex flex-col gap-6">
               {timers.map((timer) => {
                 return (

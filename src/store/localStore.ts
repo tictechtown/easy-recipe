@@ -1,7 +1,7 @@
 import slugify from "slugify";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { RecipeLD, StoredRecipe } from "./types";
+import { RecipeLD, StoredRecipe } from "../types";
 
 interface RecipeListState {
   importedRecipes: StoredRecipe[];

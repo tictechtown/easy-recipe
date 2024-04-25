@@ -1,12 +1,12 @@
 "use client";
-import Link from "next/link";
+import SideNav from "@/components/side-nav";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import fetchUrl from "../lib/fetchUrl";
-import { useRecipeListStore } from "../lib/localStore";
-import parseHtmlString from "../lib/parseHtmlString";
-import { StoredRecipe } from "../lib/types";
-import AddModal from "../ui/add-modal";
+import AddModal from "../../components/add-modal";
+import fetchUrl from "../../lib/fetchUrl";
+import parseHtmlString from "../../lib/parseHtmlString";
+import { useRecipeListStore } from "../../store/localStore";
+import { StoredRecipe } from "../../types";
 
 export default function Layout({
   children,
@@ -75,7 +75,7 @@ export default function Layout({
             </svg>
           </label>
 
-          <div className="flex-1">
+          <div className="flex flex-1 lg:hidden">
             <a className="btn btn-ghost text-xl" href="/recipes">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -92,79 +92,6 @@ export default function Layout({
               EasyRecipe
             </a>
           </div>
-          <div className="flex-none gap-2">
-            {/* <div className="form-control">
-              <input
-                type="text"
-                placeholder="Search"
-                className="input input-bordered w-24 md:w-auto"
-              />
-            </div> */}
-            <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" className="btn m-1">
-                Theme
-                <svg
-                  width="12px"
-                  height="12px"
-                  className="inline-block h-2 w-2 fill-current opacity-60"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 2048 2048"
-                >
-                  <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
-                </svg>
-              </div>
-              <ul
-                tabIndex={0}
-                className="dropdown-content z-[1] w-52 rounded-box bg-base-300 p-2 shadow-2xl"
-              >
-                <li>
-                  <input
-                    type="radio"
-                    name="theme-dropdown"
-                    className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
-                    aria-label="Default"
-                    value="default"
-                  />
-                </li>
-                <li>
-                  <input
-                    type="radio"
-                    name="theme-dropdown"
-                    className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
-                    aria-label="Cupcake"
-                    value="cupcake"
-                  />
-                </li>
-                <li>
-                  <input
-                    type="radio"
-                    name="theme-dropdown"
-                    className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
-                    aria-label="Cyberpunk"
-                    value="cyberpunk"
-                  />
-                </li>
-                <li>
-                  <input
-                    type="radio"
-                    name="theme-dropdown"
-                    className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
-                    aria-label="Valentine"
-                    value="valentine"
-                  />
-                </li>
-                <li>
-                  <input
-                    type="radio"
-                    name="theme-dropdown"
-                    className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
-                    aria-label="Aqua"
-                    value="aqua"
-                  />
-                </li>
-              </ul>
-            </div>
-          </div>
         </div>
         {children}
         <AddModal onImport={handleRecipeImport} />
@@ -177,71 +104,17 @@ export default function Layout({
           className="drawer-overlay"
         ></label>
 
-        <div className="menu min-h-full w-80 bg-base-200 p-4 text-base-content">
-          <div className="flex w-full justify-center bg-base-200">
-            <button
-              className="btn btn-primary btn-wide"
-              onClick={() =>
-                (
-                  document.getElementById("add-modal") as HTMLDialogElement
-                ).showModal()
-              }
-            >
-              Add new Recipe
-            </button>
-          </div>
-
-          <ul className="mt-4">
-            {/* Sidebar content here */}
-
-            {loading && <li>Importing...</li>}
-
-            <li>
-              <Link
-                href={`/recipes/`}
-                className="flex flex-row justify-between"
-              >
-                All Recipes
-                <svg
-                  width="80"
-                  height="80"
-                  viewBox="0 0 80 80"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 rotate-90 stroke-current"
-                  strokeWidth={6}
-                >
-                  <path
-                    d="M52 46.1836L41.591 35.7746C40.7123 34.8959 39.2877 34.8959 38.409 35.7746L28 46.1836"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
-            </li>
-
-            {importedRecipes.map((rcp) => (
-              <li key={rcp.id}>
-                <Link
-                  href={`/recipes/${rcp.id}`}
-                  className={`group flex flex-row justify-between ${
-                    pathname === `/${rcp.id}`
-                  }`}
-                >
-                  {rcp.recipe.name}
-
-                  <svg
-                    onClick={(e) => handleRemoveRecipe(rcp, e)}
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 448 512"
-                    className="hidden h-4 w-4 fill-neutral-500 hover:scale-110 hover:fill-neutral-900 group-hover:block"
-                  >
-                    <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-                  </svg>
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <div className="menu min-h-full w-72 bg-base-200 p-4 text-base-content">
+          <SideNav
+            loading={loading}
+            onAdd={() =>
+              (
+                document.getElementById("add-modal") as HTMLDialogElement
+              ).showModal()
+            }
+            recipesHistory={importedRecipes}
+            onRemove={handleRemoveRecipe}
+          />
         </div>
       </div>
     </div>

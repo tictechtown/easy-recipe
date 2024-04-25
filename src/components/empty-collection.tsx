@@ -31,7 +31,7 @@ export default function EmptyCollection({ onImport }: Props) {
             type="text"
             value={text}
             placeholder="https://"
-            className="input join-item input-bordered basis-4/5"
+            className="focus-ring input join-item input-bordered basis-4/5"
             onChange={(e) => setText(e.target.value)}
           />
 

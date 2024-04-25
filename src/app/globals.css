@@ -37,6 +37,12 @@
   .animation-delay-1000 {
     animation-delay: 1s;
   }
+
+  @variants hover, focus {
+    .focus-ring {
+      @apply placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary;
+    }
+  }
 }
 
 @layer components {

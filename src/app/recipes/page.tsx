@@ -1,11 +1,11 @@
 "use client";
 import Link from "next/link";
 import { ChangeEvent, useMemo, useState } from "react";
-import fetchUrl from "../lib/fetchUrl";
-import { useRecipeListStore } from "../lib/localStore";
-import parseHtmlString from "../lib/parseHtmlString";
-import EmptyCollection from "../ui/empty-collection";
-import GridRecipe from "../ui/grid-recipe";
+import EmptyCollection from "../../components/empty-collection";
+import GridRecipe from "../../components/grid-recipe";
+import fetchUrl from "../../lib/fetchUrl";
+import parseHtmlString from "../../lib/parseHtmlString";
+import { useRecipeListStore } from "../../store/localStore";
 
 export default function Page() {
   const { importedRecipes, addRecipe } = useRecipeListStore((state) => state);
@@ -59,7 +59,7 @@ export default function Page() {
       <label className="input input-bordered m-4 flex items-center gap-2">
         <input
           type="text"
-          className="grow placeholder-gray-500"
+          className="focus-ring grow "
           placeholder="Search a recipe"
           value={searchText}
           onChange={handleSearch}

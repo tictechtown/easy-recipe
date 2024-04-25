@@ -1,3 +1,4 @@
+import { isTimerValid } from "@/lib/utils";
 import { Duration } from "luxon";
 import { useState } from "react";
 
@@ -9,7 +10,7 @@ export default function AddTimerButton({ onClick }: Props) {
   const [timerName, setTimerName] = useState("");
   const [duration, setDuration] = useState("00:00");
 
-  const isValid = timerName !== "" && Duration.fromISOTime(duration).isValid;
+  const isValid = isTimerValid(timerName, duration);
 
   const handleOnClick = () => {
     if (isValid) {
@@ -22,21 +23,21 @@ export default function AddTimerButton({ onClick }: Props) {
   return (
     <div className="join join-vertical md:join-horizontal">
       <input
-        className="input join-item input-bordered "
+        className="focus-ring w-100 input join-item input-bordered"
         placeholder="Timer name"
         type="text"
         value={timerName}
         onChange={(e) => setTimerName(e.target.value)}
       />
       <input
-        className="input join-item input-bordered w-auto "
+        className="focus-ring input join-item input-bordered w-24 font-mono"
         type="text"
         value={duration}
         onChange={(e) => setDuration(e.target.value)}
       />
 
       <button
-        className="btn btn-secondary join-item"
+        className="btn btn-primary join-item"
         onClick={handleOnClick}
         disabled={!isValid}
       >

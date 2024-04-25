@@ -1,6 +1,6 @@
 "use client";
-import { useRecipeListStore } from "@/app/lib/localStore";
-import Recipe from "@/app/ui/recipe";
+import Recipe from "@/components/recipe";
+import { useRecipeListStore } from "@/store/localStore";
 import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 

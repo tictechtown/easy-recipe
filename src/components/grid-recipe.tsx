@@ -1,5 +1,5 @@
-import { StoredRecipe } from "../lib/types";
 import { parseRecipeImage } from "../lib/utils";
+import { StoredRecipe } from "../types";
 
 type Props = {
   data: StoredRecipe;
@@ -11,7 +11,7 @@ export default function GridRecipe(props: Props) {
 
   return (
     <div className="card card-side card-compact h-full flex-row bg-base-200 sm:flex-col sm:rounded-t-md">
-      <figure>
+      <figure className="sm:rounded-none sm:rounded-t-xl">
         <img
           src={imageUrl}
           alt="Album"

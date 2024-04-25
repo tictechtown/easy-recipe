@@ -1,4 +1,4 @@
-import { RecipeLD } from "./types";
+import { RecipeLD } from "../types";
 
 function parseLDJSON(tags: NodeListOf<Element>): RecipeLD | undefined {
   let foundRecipeObjects: RecipeLD | [RecipeLD] | undefined;

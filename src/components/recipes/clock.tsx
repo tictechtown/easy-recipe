@@ -49,19 +49,11 @@ export default function Clock(props: Props) {
   );
 
   return (
-    <div className="prose flex flex-row items-center gap-4">
-      <div
-        className="radial-progress text-primary"
-        style={
-          {
-            "--value": value,
-          } as React.CSSProperties
-        }
-        role="progressbar"
-      >
+    <div className="prose bordered flex flex-row items-center gap-4 rounded-xl bg-base-100 shadow">
+      <div className="rounded-l-xl bg-base-300 p-4 font-mono text-primary">
         {displayedValue.toFormat("mm:ss")}
       </div>
-      {name}
+      <div className="rounded-r-xl">{name}</div>
     </div>
   );
 }
