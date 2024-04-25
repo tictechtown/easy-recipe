@@ -86,7 +86,7 @@ export type RecipeLD = {
   recipeCuisine: string | string[];
   recipeIngredient: string | string[];
   recipeInstructions: string[] | HowToLD[] | HowToSectionLD[];
-  recipeYield: number | string | string[];
+  recipeYield?: number | string | string[];
   review?: ReviewLD[];
   mainEntityOfPage?: any;
   url: string;

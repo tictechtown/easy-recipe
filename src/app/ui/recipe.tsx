@@ -6,6 +6,7 @@ import {
   parseBrandLogo,
   parseBrandName,
   parseRecipeImage,
+  parseRecipeYield,
   round5,
 } from "../lib/utils";
 import AddTimerButton from "./recipe-components/add-timer-btn";
@@ -29,7 +30,7 @@ export default function Recipe({ data, onDelete }: Props) {
   const [multiplier, setMultiplier] = useState(1);
   const [showStepper, setShowStepper] = useState(false);
   const [timers, setTimers] = useState<RecipeTimer[]>([]);
-  const recipeYield = +(data.recipeYield.toString().match(/\d+/) ?? "1");
+  const recipeYield = parseRecipeYield(data.recipeYield);
 
   const handleShowStepper = () => {
     setShowStepper((prev) => !prev);

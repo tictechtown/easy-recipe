@@ -25,6 +25,13 @@ export function parseRecipeImage(image: RecipeLD["image"]): string {
   return typeof toProcess === "string" ? toProcess : toProcess.url;
 }
 
+export function parseRecipeYield(recipeYield: RecipeLD["recipeYield"]): number {
+  if (!recipeYield) {
+    return 1;
+  }
+  return +(recipeYield.toString().match(/\d+/) ?? "1");
+}
+
 export function parseBrandName(
   brandName: string | undefined,
   fullUrl: string
