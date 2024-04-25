@@ -34,7 +34,7 @@ export function parseRecipeYield(recipeYield: RecipeLD["recipeYield"]): number {
 
 export function parseBrandName(
   brandName: string | undefined,
-  fullUrl: string
+  fullUrl: string,
 ): string {
   if (brandName) {
     return brandName;
@@ -48,7 +48,7 @@ export function parseBrandName(
 }
 
 export function parseBrandLogo(
-  publisher: RecipeLD["publisher"]
+  publisher: RecipeLD["publisher"],
 ): string | null {
   if (!publisher) {
     return null;

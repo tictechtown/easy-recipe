@@ -71,7 +71,7 @@ export default function Recipe({ data, onDelete }: Props) {
 
   const handleAddTimerFromInstruction = (
     stepNumber: number,
-    matchedValue: string
+    matchedValue: string,
   ) => {
     // TODO - quick and dirty, we should process this better
     const duration = +(matchedValue.match(/\d+/) ?? "0");
@@ -103,19 +103,19 @@ export default function Recipe({ data, onDelete }: Props) {
   const cuisines = Array.isArray(data.recipeCuisine)
     ? data.recipeCuisine
     : data.recipeCuisine
-    ? [data.recipeCuisine]
-    : [];
+      ? [data.recipeCuisine]
+      : [];
 
   const categories = Array.isArray(data.recipeCategory)
     ? data.recipeCategory
     : data.recipeCategory
-    ? [data.recipeCategory]
-    : [];
+      ? [data.recipeCategory]
+      : [];
 
   const ratingValue = !data.aggregateRating
     ? 0
     : round5(
-        +data.aggregateRating.ratingValue * 10
+        +data.aggregateRating.ratingValue * 10,
       ); /* value between 0 and 50, with 5 increment*/
 
   const imageUrl = parseRecipeImage(data.image);
@@ -126,24 +126,24 @@ export default function Recipe({ data, onDelete }: Props) {
 
   const brandName = parseBrandName(
     data.publisher?.brand ?? data.publisher?.name,
-    data.url
+    data.url,
   );
 
   const brandLogo = parseBrandLogo(data.publisher);
 
   return (
-    <div className="container flex flex-col gap-4 md:gap-8 py-4 md:py-8 max-w-4xl animate-fade-in-move-down">
+    <div className="container flex max-w-4xl animate-fade-in-move-down flex-col gap-4 py-4 md:gap-8 md:py-8">
       <img
-        className="rounded-3xl max-h-96 object-cover  px-2 lg:px-0"
+        className="max-h-96 rounded-3xl object-cover  px-2 lg:px-0"
         src={imageUrl}
         alt="cover image"
       />
 
-      <div className="flex flex-col md:flex-row gap-0 md:gap-12 md:justify-between">
-        <div className="card bg-base-100 card-compact md:basis-2/3">
+      <div className="flex flex-col gap-0 md:flex-row md:justify-between md:gap-12">
+        <div className="card card-compact bg-base-100 md:basis-2/3">
           <div className="card-body">
             <hgroup>
-              <h2 className="card-title text-primary text-2xl sm:text-4xl md:text-5xl">
+              <h2 className="card-title text-2xl text-primary sm:text-4xl md:text-5xl">
                 {data.name}
               </h2>
               {data.aggregateRating && (
@@ -160,7 +160,7 @@ export default function Recipe({ data, onDelete }: Props) {
 
             <div className="py-2">
               {!!data.description && <>{he.decode(data.description)}</>}
-              <div className="flex flex-row gap-2 *:cursor-pointer my-1">
+              <div className="my-1 flex flex-row gap-2 *:cursor-pointer">
                 {categories.map((cat) => (
                   <div key={cat} className="badge badge-ghost hover:scale-105">
                     {cat}
@@ -179,7 +179,7 @@ export default function Recipe({ data, onDelete }: Props) {
                 className="btn btn-outline btn-sm"
                 target="_blank"
               >
-                <div className="flex gap-4 items-center">
+                <div className="flex items-center gap-4">
                   {brandLogo && (
                     <div className="avatar">
                       <div className="w-4 rounded-full object-cover">
@@ -190,7 +190,7 @@ export default function Recipe({ data, onDelete }: Props) {
                   <span>{brandName}</span>
                   <svg
                     viewBox="0 0 24 24"
-                    className="w-4 h-4"
+                    className="h-4 w-4"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
@@ -211,10 +211,10 @@ export default function Recipe({ data, onDelete }: Props) {
           </div>
         </div>
 
-        <div className="mx-4 card-bordered stats stats-horizontal md:stats-vertical">
+        <div className="stats card-bordered stats-horizontal mx-4 md:stats-vertical">
           {includeTotalDuration && totalDuration.isValid && (
             <div className="stat">
-              <div className="stat-title text-md md:text-lg">Total Time</div>
+              <div className="text-md stat-title md:text-lg">Total Time</div>
               <div className="stat-value text-2xl md:text-3xl">
                 {totalDuration
                   .normalize()
@@ -226,7 +226,7 @@ export default function Recipe({ data, onDelete }: Props) {
 
           {prepDuration.isValid && prepDuration.toMillis() !== 0 && (
             <div className="stat">
-              <div className="stat-title text-md md:text-lg">Prep Time</div>
+              <div className="text-md stat-title md:text-lg">Prep Time</div>
               <div className="stat-value text-2xl md:text-3xl">
                 {prepDuration
                   .normalize()
@@ -238,7 +238,7 @@ export default function Recipe({ data, onDelete }: Props) {
 
           {cookDuration.isValid && cookDuration.toMillis() !== 0 && (
             <div className="stat">
-              <div className="stat-title text-md md:text-lg">Cook Time</div>
+              <div className="text-md stat-title md:text-lg">Cook Time</div>
               <div className="stat-value text-2xl md:text-3xl">
                 {cookDuration
                   .normalize()
@@ -249,7 +249,7 @@ export default function Recipe({ data, onDelete }: Props) {
           )}
 
           <div className="stat">
-            <div className="stat-title text-md md:text-lg">Yield</div>
+            <div className="text-md stat-title md:text-lg">Yield</div>
             <div className="stat-value text-2xl md:text-3xl">
               {showStepper ? (
                 <input
@@ -265,14 +265,14 @@ export default function Recipe({ data, onDelete }: Props) {
               )}
             </div>
             <div
-              className="stat-figure text-primary cursor-pointer"
+              className="stat-figure cursor-pointer text-primary"
               onClick={handleShowStepper}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                className="inline-block w-8 h-8 stroke-current"
+                className="inline-block h-8 w-8 stroke-current"
               >
                 <path
                   strokeLinecap="round"
@@ -286,10 +286,10 @@ export default function Recipe({ data, onDelete }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 md:gap-2 lg:gap-12	">
-        <div className="card card-compact sm:card-normal bg-base-200 mx-4 lg:mx-auto prose md:basis-2/5">
+      <div className="flex flex-col gap-4 md:flex-row md:gap-2 lg:gap-12	">
+        <div className="prose card card-compact mx-4 bg-base-200 sm:card-normal md:basis-2/5 lg:mx-auto">
           <div className="card-body ">
-            <h2 className="card-title not-prose">Ingredients</h2>
+            <h2 className="not-prose card-title">Ingredients</h2>
             <div className="divider hidden sm:flex" />
             <ul className="my-0 sm:my-1">
               {recipeIngredient.map((rI, index) => (
@@ -301,9 +301,9 @@ export default function Recipe({ data, onDelete }: Props) {
           </div>
         </div>
 
-        <div className="card card-compact sm:card-normal bg-base-200  sm:basis-3/5 mx-4 lg:mx-auto prose">
+        <div className="prose card card-compact mx-4  bg-base-200 sm:card-normal sm:basis-3/5 lg:mx-auto">
           <div className="card-body">
-            <h2 className="card-title not-prose">Steps</h2>
+            <h2 className="not-prose card-title">Steps</h2>
             <div className="divider hidden sm:flex" />
             {data.recipeInstructions && (
               <RecipeInstructions
@@ -315,10 +315,10 @@ export default function Recipe({ data, onDelete }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 md:justify-between">
-        <div className="card card-compact sm:card-normal bg-base-200 xl:basis-1/3 mx-4 lg:mx-0 prose">
+      <div className="flex flex-col gap-4 md:flex-row md:justify-between">
+        <div className="prose card card-compact mx-4 bg-base-200 sm:card-normal lg:mx-0 xl:basis-1/3">
           <div className="card-body">
-            <h2 className="card-title not-prose">Nutritions</h2>
+            <h2 className="not-prose card-title">Nutritions</h2>
             <div className="divider hidden sm:flex" />
             {data.nutrition && (
               <div className="overflow-x-auto">
@@ -371,7 +371,7 @@ export default function Recipe({ data, onDelete }: Props) {
           </div>
         </div>
 
-        <div className="card card-compact card-bordered sm:card-normal  bg-base-100  xl:basis-2/3 mx-4 lg:mx-0">
+        <div className="card card-bordered card-compact mx-4  bg-base-100  sm:card-normal lg:mx-0 xl:basis-2/3">
           <div className="card-body">
             <h2 className="card-title">Timers</h2>
             <div className="divider hidden sm:flex" />

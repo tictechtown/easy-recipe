@@ -23,7 +23,7 @@ function InstructionBlock({
     <>
       <li className="cs-step">{he.decode(value as string)}</li>
       {matches && matches?.length > 0 && (
-        <div className="flex flex-row gap-2 ml-12">
+        <div className="ml-12 flex flex-row gap-2">
           {matches?.map((match, index) => (
             <span
               key={match + index}
@@ -32,7 +32,7 @@ function InstructionBlock({
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4 mr-2"
+                className="mr-2 h-4 w-4"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -59,7 +59,7 @@ export default function RecipeInstructions({
 
   if (typeof instructions[0] === "string") {
     return (
-      <ul className="steps cs-steps-vertical not-prose gap-2 md:gap-4">
+      <ul className="cs-steps-vertical not-prose steps gap-2 md:gap-4">
         {instructions.map((rI, index) => (
           <InstructionBlock
             key={index}
@@ -74,7 +74,7 @@ export default function RecipeInstructions({
 
   if (instructions[0]["@type"] === "HowToStep") {
     return (
-      <ul className="steps cs-steps-vertical not-prose gap-2 md:gap-4">
+      <ul className="cs-steps-vertical not-prose steps gap-2 md:gap-4">
         {instructions.map((rI, index) => (
           <InstructionBlock
             key={index}
@@ -88,7 +88,7 @@ export default function RecipeInstructions({
   }
 
   return (instructions as HowToSectionLD[]).map((section: HowToSectionLD) => (
-    <div key={section.name} className="card bg-base-200 card-bordered glass">
+    <div key={section.name} className="card glass card-bordered bg-base-200">
       <div className="card-body">
         <h6 className="card-title pb-4">{section.name}</h6>
         <RecipeInstructions

@@ -36,20 +36,20 @@ export default function AddModal(props: Props) {
   };
 
   return (
-    <dialog id="add-modal" className="modal prose" onClose={handleClose}>
-      <div className="modal-box w-100 max-w-xl">
+    <dialog id="add-modal" className="prose modal" onClose={handleClose}>
+      <div className="w-100 modal-box max-w-xl">
         <form method="dialog">
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+          <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
             ✕
           </button>
         </form>
-        <h3 className="font-bold text-lg">Add a recipe URL</h3>
-        <div className="join flex flex-row w-full">
+        <h3 className="text-lg font-bold">Add a recipe URL</h3>
+        <div className="join flex w-full flex-row">
           <input
             type="text"
             value={text}
             placeholder="https://"
-            className={`join-item input input-bordered basis-4/5 ${
+            className={`input join-item input-bordered basis-4/5 ${
               showError && "input-error"
             }`}
             onChange={(e) => setText(e.target.value)}
@@ -57,7 +57,7 @@ export default function AddModal(props: Props) {
 
           <button
             disabled={!text}
-            className="join-item btn btn-primary basis-1/5"
+            className="btn btn-primary join-item basis-1/5"
             onClick={handleRecipeImport}
           >
             {loading && <span className="loading loading-spinner"></span>}
@@ -65,7 +65,7 @@ export default function AddModal(props: Props) {
           </button>
         </div>
         {showError && (
-          <span className="font-bold text-sm text-error">
+          <span className="text-sm font-bold text-error">
             Error importing the recipe
           </span>
         )}

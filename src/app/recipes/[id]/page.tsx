@@ -9,7 +9,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const { importedRecipes, removeRecipe } = useRecipeListStore(
-    (state) => state
+    (state) => state,
   );
   const storedRecipe = importedRecipes.find((rcp) => rcp.id === params.id);
 

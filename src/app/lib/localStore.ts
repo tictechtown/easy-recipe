@@ -36,12 +36,12 @@ export const useRecipeListStore = create<RecipeListState>()(
       removeRecipe: (recipe: StoredRecipe) =>
         set((state) => ({
           importedRecipes: state.importedRecipes.filter(
-            (rc) => rc.id !== recipe.id
+            (rc) => rc.id !== recipe.id,
           ),
         })),
     }),
     {
       name: "recipe-list",
-    }
-  )
+    },
+  ),
 );

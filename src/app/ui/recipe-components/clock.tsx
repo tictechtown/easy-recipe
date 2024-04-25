@@ -10,7 +10,7 @@ type Props = {
 function convertDurationLeftToPercentage(
   durationLeft: number,
   startTimerTimestamp: number,
-  endTimerTimestamp: number
+  endTimerTimestamp: number,
 ) {
   const totalTime = endTimerTimestamp - startTimerTimestamp;
   return (100 * durationLeft) / totalTime;
@@ -19,7 +19,7 @@ function convertDurationLeftToPercentage(
 export default function Clock(props: Props) {
   const { name, startTimerTimestamp, endTimerTimestamp } = props;
   const [durationLeft, setDurationLeft] = useState(
-    endTimerTimestamp - Date.now()
+    endTimerTimestamp - Date.now(),
   );
 
   useEffect(() => {
@@ -40,16 +40,16 @@ export default function Clock(props: Props) {
   const value = convertDurationLeftToPercentage(
     durationLeft,
     startTimerTimestamp,
-    endTimerTimestamp
+    endTimerTimestamp,
   );
 
   const displayedValue = Duration.fromMillis(durationLeft).shiftTo(
     "minutes",
-    "seconds"
+    "seconds",
   );
 
   return (
-    <div className="flex flex-row gap-4 items-center prose">
+    <div className="prose flex flex-row items-center gap-4">
       <div
         className="radial-progress text-primary"
         style={

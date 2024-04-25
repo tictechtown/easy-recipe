@@ -39,7 +39,7 @@ export default function Page() {
           .toLocaleLowerCase()
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/, "")
-          .includes(normalizedText)
+          .includes(normalizedText),
       );
     }
 
@@ -48,15 +48,15 @@ export default function Page() {
 
   if (importedRecipes.length === 0) {
     return (
-      <div className="container flex flex-col align-center h-screen gap-8 max-w-4xl py-12 px-4 lg:px-0 prose">
+      <div className="align-center container prose flex h-screen max-w-4xl flex-col gap-8 px-4 py-12 lg:px-0">
         <EmptyCollection onImport={handleRecipeImport} />
       </div>
     );
   }
 
   return (
-    <div className="container flex flex-col gap-8 flex-1 max-w-4xl py-12 px-4 lg:px-0">
-      <label className="input input-bordered flex items-center gap-2 m-4">
+    <div className="container flex max-w-4xl flex-1 flex-col gap-8 px-4 py-12 lg:px-0">
+      <label className="input input-bordered m-4 flex items-center gap-2">
         <input
           type="text"
           className="grow placeholder-gray-500"
@@ -68,7 +68,7 @@ export default function Page() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
           fill="currentColor"
-          className="w-4 h-4 opacity-70"
+          className="h-4 w-4 opacity-70"
         >
           <path
             fillRule="evenodd"
@@ -78,7 +78,7 @@ export default function Page() {
         </svg>
       </label>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-4">
         {filteredRecipes.map((rcp) => (
           <Link key={rcp.id} href={`/recipes/${rcp.id}`}>
             <GridRecipe data={rcp} />

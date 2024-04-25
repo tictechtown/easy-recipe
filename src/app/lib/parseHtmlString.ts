@@ -24,7 +24,7 @@ function parseLDJSON(tags: NodeListOf<Element>): RecipeLD | undefined {
 
   if (Array.isArray(foundRecipeObjects)) {
     return foundRecipeObjects.find(
-      (obj) => obj["@type"] === "Recipe" || obj["@type"].includes("Recipe")
+      (obj) => obj["@type"] === "Recipe" || obj["@type"].includes("Recipe"),
     );
   }
 
@@ -100,7 +100,7 @@ export default function parseHtmlString(value: string): RecipeLD | undefined {
 
   // first, try to find ld+json scripts
   const LDJsonScripts = document.querySelectorAll(
-    'script[type="application/ld+json"]'
+    'script[type="application/ld+json"]',
   );
 
   let foundLDRecipe = parseLDJSON(LDJsonScripts);

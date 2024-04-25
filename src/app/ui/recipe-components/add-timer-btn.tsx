@@ -22,14 +22,14 @@ export default function AddTimerButton({ onClick }: Props) {
   return (
     <div className="join join-vertical md:join-horizontal">
       <input
-        className="input input-bordered join-item "
+        className="input join-item input-bordered "
         placeholder="Timer name"
         type="text"
         value={timerName}
         onChange={(e) => setTimerName(e.target.value)}
       />
       <input
-        className="input input-bordered join-item w-auto "
+        className="input join-item input-bordered w-auto "
         type="text"
         value={duration}
         onChange={(e) => setDuration(e.target.value)}

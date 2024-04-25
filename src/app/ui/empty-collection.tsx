@@ -25,19 +25,19 @@ export default function EmptyCollection({ onImport }: Props) {
   return (
     <>
       <div>
-        <p className="font-bold text-lg">Add a recipe URL</p>
-        <div className="join flex flex-row w-full">
+        <p className="text-lg font-bold">Add a recipe URL</p>
+        <div className="join flex w-full flex-row">
           <input
             type="text"
             value={text}
             placeholder="https://"
-            className="join-item input input-bordered basis-4/5"
+            className="input join-item input-bordered basis-4/5"
             onChange={(e) => setText(e.target.value)}
           />
 
           <button
             disabled={!text}
-            className="join-item btn btn-primary basis-1/5"
+            className="btn btn-primary join-item basis-1/5"
             onClick={handleRecipeImport}
           >
             {loading && <span className="loading loading-spinner"></span>}
@@ -55,7 +55,7 @@ export default function EmptyCollection({ onImport }: Props) {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="stroke-current shrink-0 h-6 w-6"
+            className="h-6 w-6 shrink-0 stroke-current"
             fill="none"
             viewBox="0 0 24 24"
           >
