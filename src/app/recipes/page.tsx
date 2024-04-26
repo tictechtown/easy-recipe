@@ -161,7 +161,7 @@ export default function Page() {
       <div>
         <div className="w-100 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end sm:gap-0">
           <h1 className="text-4xl font-bold">My Recipes</h1>
-          <div className="flex-0 flex w-full flex-row items-end justify-between sm:w-auto">
+          <div className="flex-0 flex w-full  flex-col items-end justify-between sm:w-auto sm:flex-row">
             <label className="input input-bordered flex w-full items-center gap-2 sm:w-auto">
               <input
                 type="text"
@@ -188,7 +188,7 @@ export default function Page() {
               <ul className="bg-ghost menu menu-horizontal">
                 <li>
                   <details id="sort-menu" onBlur={handleSortMenuBlur}>
-                    <summary className="w-40 text-end">
+                    <summary className="w-auto text-end sm:w-40">
                       {sortOption.toString()}
                     </summary>
                     <ul className="z-10">

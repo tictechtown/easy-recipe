@@ -19,7 +19,7 @@ export default function GridRecipe(props: Props) {
         />
       </figure>
       <div className="prose card-body flex flex-1 justify-center sm:justify-normal">
-        <h6 className="card-title text-sm">{recipe.name}</h6>
+        <h6 className="card-title text-sm text-primary">{recipe.name}</h6>
       </div>
     </div>
   );

@@ -21,28 +21,58 @@ export default function AddTimerButton({ onClick }: Props) {
   };
 
   return (
-    <div className="join join-horizontal">
-      <input
-        className="focus-ring w-100 input join-item input-bordered"
-        placeholder="Timer name"
-        type="text"
-        value={timerName}
-        onChange={(e) => setTimerName(e.target.value)}
-      />
-      <input
-        className="focus-ring input join-item input-bordered w-24 font-mono"
-        type="text"
-        value={duration}
-        onChange={(e) => setDuration(e.target.value)}
-      />
-
+    <div>
       <button
-        className="btn btn-primary join-item"
-        onClick={handleOnClick}
-        disabled={!isValid}
+        className="btn btn-link"
+        onClick={() =>
+          (
+            document.getElementById("add_timer_modal") as HTMLDialogElement
+          ).showModal()
+        }
       >
         Add Timer
       </button>
+      <dialog
+        id="add_timer_modal"
+        className="modal modal-bottom sm:modal-middle"
+      >
+        <div className="modal-box">
+          <form method="dialog">
+            {/* if there is a button in form, it will close the modal */}
+            <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+          <div className="flex flex-col gap-2">
+            <label>Timer Name</label>
+            <input
+              className="focus-ring w-100 input  input-bordered"
+              placeholder="Step 1"
+              type="text"
+              value={timerName}
+              onChange={(e) => setTimerName(e.target.value)}
+            />
+            <label>Timer Duration (hh:mm)</label>
+            <input
+              className="focus-ring input  input-bordered w-24 font-mono"
+              type="text"
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
+            />
+
+            <button
+              className="btn btn-primary mt-4"
+              onClick={handleOnClick}
+              disabled={!isValid}
+            >
+              Add Timer
+            </button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     </div>
   );
 }
