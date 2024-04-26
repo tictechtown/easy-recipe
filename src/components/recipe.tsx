@@ -103,6 +103,18 @@ export default function Recipe({ data, onDelete }: Props) {
     ]);
   };
 
+  const recipeIngredient = Array.isArray(data.recipeIngredient)
+    ? data.recipeIngredient
+    : data.recipeIngredient?.split(", ") ?? [];
+
+  const handleExportIngredients = () => {
+    navigator.share({
+      title: `${data.name}`,
+      text: recipeIngredient.join("\n"),
+    });
+  };
+  const navigatorCanShare = !!navigator.share && navigator.canShare();
+
   const prepDuration = Duration.fromISO(data.prepTime);
   const cookDuration = Duration.fromISO(data.cookTime);
   const totalDuration = Duration.fromISO(data.totalTime);
@@ -129,10 +141,6 @@ export default function Recipe({ data, onDelete }: Props) {
       ); /* value between 0 and 50, with 5 increment*/
 
   const imageUrl = parseRecipeImage(data.image);
-
-  const recipeIngredient = Array.isArray(data.recipeIngredient)
-    ? data.recipeIngredient
-    : data.recipeIngredient?.split(", ") ?? [];
 
   const brandName = parseBrandName(
     data.publisher?.brand ?? data.publisher?.name,
@@ -227,7 +235,7 @@ export default function Recipe({ data, onDelete }: Props) {
           </div>
         </div>
 
-        <div className="stats card-bordered stats-horizontal mx-4 md:stats-vertical">
+        <div className="stats card-bordered stats-horizontal mx-4 overflow-hidden md:stats-vertical">
           {includeTotalDuration && totalDuration.isValid && (
             <div className="stat">
               <div className="text-md stat-title md:text-lg">Total Time</div>
@@ -264,7 +272,7 @@ export default function Recipe({ data, onDelete }: Props) {
             </div>
           )}
 
-          <div className="stat">
+          <div className="stat overflow-hidden">
             <div className="text-md stat-title md:text-lg">Yield</div>
             <div
               className="stat-value text-2xl md:text-3xl"
@@ -310,6 +318,7 @@ export default function Recipe({ data, onDelete }: Props) {
         <div className="prose card card-compact mx-4 bg-base-200 sm:card-normal md:basis-2/5 lg:mx-auto">
           <div className="card-body ">
             <h2 className="not-prose card-title">Ingredients</h2>
+
             <ul className="my-0 sm:my-1">
               {recipeIngredient.map((rI, index) => (
                 <li key={index + 1}>
@@ -317,6 +326,16 @@ export default function Recipe({ data, onDelete }: Props) {
                 </li>
               ))}
             </ul>
+            {navigatorCanShare && (
+              <p className="not-prose flex flex-row items-end justify-end">
+                <button
+                  className="btn btn-link items-end justify-end"
+                  onClick={handleExportIngredients}
+                >
+                  Export
+                </button>
+              </p>
+            )}
           </div>
         </div>
 
@@ -409,7 +428,7 @@ export default function Recipe({ data, onDelete }: Props) {
       </div>
 
       <button
-        className="btn btn-outline btn-error mx-4 lg:mx-0"
+        className="btn btn-outline btn-error btn-error mx-4 mt-16 lg:mx-0"
         onClick={() => onDelete(data)}
       >
         Delete

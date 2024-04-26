@@ -47,6 +47,10 @@ export default function Layout({
     removeRecipe(rcp);
   };
 
+  const handleAddRecipe = () => {
+    (document.getElementById("add-modal") as HTMLDialogElement).showModal();
+  };
+
   return (
     <div className="drawer xl:drawer-open">
       <input id="drawer-nav" type="checkbox" className="drawer-toggle" />
@@ -56,6 +60,7 @@ export default function Layout({
           <label
             aria-label="Open menu"
             htmlFor="drawer-nav"
+            id="small-drawer-btn"
             className="btn btn-square btn-ghost drawer-button xl:hidden "
           >
             <svg
@@ -75,7 +80,7 @@ export default function Layout({
             </svg>
           </label>
 
-          <div className="flex flex-1 lg:hidden">
+          <div className="flex flex-1 xl:hidden">
             <a className="btn btn-ghost text-xl" href="/recipes">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -92,6 +97,19 @@ export default function Layout({
               EasyRecipe
             </a>
           </div>
+          <div
+            className="flex-0 btn btn-outline btn-primary xl:hidden"
+            onClick={handleAddRecipe}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 -960 960 960"
+              className="h-4 w-4 fill-current"
+            >
+              <path d="M680-160v-120H560v-80h120v-120h80v120h120v80H760v120h-80ZM440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm560-40h-80q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480Z" />
+            </svg>
+            Add
+          </div>
         </div>
         {children}
         <AddModal onImport={handleRecipeImport} />
@@ -107,11 +125,7 @@ export default function Layout({
         <div className="menu min-h-full w-72 bg-base-200 p-4 text-base-content">
           <SideNav
             loading={loading}
-            onAdd={() =>
-              (
-                document.getElementById("add-modal") as HTMLDialogElement
-              ).showModal()
-            }
+            onAdd={handleAddRecipe}
             recipesHistory={importedRecipes}
             onRemove={handleRemoveRecipe}
           />

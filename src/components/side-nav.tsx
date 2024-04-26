@@ -20,10 +20,21 @@ export default function SideNav({
 }: Props) {
   const pathname = usePathname();
 
+  const handleSideNavBlur = () => {
+    console.log(document.getElementById("small-drawer-btn")?.style.display);
+    if (document.getElementById("small-drawer-btn")?.style.display !== "none") {
+      (document.getElementById("drawer-nav") as HTMLInputElement).checked =
+        false;
+    }
+  };
+
   return (
     <>
       <Link className="text-xl" href="/recipes">
-        <div className="flex flex-row items-center gap-2">
+        <div
+          className="flex flex-row items-center gap-2"
+          onClick={handleSideNavBlur}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-8 w-8"
@@ -42,27 +53,37 @@ export default function SideNav({
 
       <ul className="mt-4">
         <li>
-          <Link href={`/recipes/`} className="">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 -960 960 960"
-              className="h-4 w-4 fill-current"
+          <Link href={`/recipes/`}>
+            <div
+              className="flex w-full flex-row items-center justify-between gap-2"
+              onClick={handleSideNavBlur}
             >
-              <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
-            </svg>
-            All Recipes
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 -960 960 960"
+                className="h-4 w-4 fill-current"
+              >
+                <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+              </svg>
+              My Recipes
+            </div>
           </Link>
         </li>
         <li onClick={onAdd}>
           <Link href={`#`} className="">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 -960 960 960"
-              className="h-4 w-4 fill-current"
+            <div
+              className="flex w-full flex-row items-center justify-between gap-2"
+              onClick={handleSideNavBlur}
             >
-              <path d="M680-160v-120H560v-80h120v-120h80v120h120v80H760v120h-80ZM440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm560-40h-80q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480Z" />
-            </svg>
-            Add new Recipe
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 -960 960 960"
+                className="h-4 w-4 fill-current"
+              >
+                <path d="M680-160v-120H560v-80h120v-120h80v120h120v80H760v120h-80ZM440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm560-40h-80q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480Z" />
+              </svg>
+              Add new Recipe
+            </div>
           </Link>
         </li>
       </ul>
@@ -78,20 +99,23 @@ export default function SideNav({
           <li key={rcp.id}>
             <Link
               href={`/recipes/${rcp.id}`}
-              className={`group flex flex-row justify-between ${
-                pathname === `/${rcp.id}`
-              }`}
+              className={`group flex ${pathname === `/${rcp.id}`}`}
             >
-              {rcp.recipe.name}
-
-              <svg
-                onClick={(e) => onRemove(rcp, e)}
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-                className="hidden h-4 w-4 fill-neutral-500 hover:scale-110 hover:fill-neutral-900 group-hover:block"
+              <div
+                className="flex w-full flex-row justify-between"
+                onClick={handleSideNavBlur}
               >
-                <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-              </svg>
+                {rcp.recipe.name}
+
+                <svg
+                  onClick={(e) => onRemove(rcp, e)}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 448 512"
+                  className="hidden h-4 w-4 fill-neutral-500 hover:scale-110 hover:fill-neutral-900 group-hover:block"
+                >
+                  <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                </svg>
+              </div>
             </Link>
           </li>
         ))}

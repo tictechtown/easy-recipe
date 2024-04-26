@@ -1,6 +1,6 @@
 import { Duration } from "luxon";
 import { parseIngredient } from "parse-ingredient";
-import { ImageLD, RecipeLD } from "../types";
+import { ImageLD, RecipeLD, StoredRecipe } from "../types";
 
 export function round5(x: number) {
   return Math.ceil(x / 5) * 5;
@@ -79,4 +79,28 @@ export function isTimerValid(
   const duration = Duration.fromISOTime(timerDuration);
 
   return timerName !== "" && duration.isValid && duration.toMillis() > 1000;
+}
+
+export function sortRecipeByNameAsc(
+  recipeA: StoredRecipe,
+  recipeB: StoredRecipe,
+) {
+  const nameA = recipeA.recipe.name.toUpperCase(); // ignore upper and lowercase
+  const nameB = recipeB.recipe.name.toUpperCase(); // ignore upper and lowercase
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+
+  // names must be equal
+  return 0;
+}
+
+export function sortRecipeByNameDesc(
+  recipeA: StoredRecipe,
+  recipeB: StoredRecipe,
+) {
+  return -sortRecipeByNameAsc(recipeA, recipeB);
 }

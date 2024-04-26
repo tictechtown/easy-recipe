@@ -21,7 +21,7 @@ export default function AddTimerButton({ onClick }: Props) {
   };
 
   return (
-    <div className="join join-vertical md:join-horizontal">
+    <div className="join join-horizontal">
       <input
         className="focus-ring w-100 input join-item input-bordered"
         placeholder="Timer name"
