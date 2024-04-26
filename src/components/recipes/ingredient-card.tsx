@@ -24,7 +24,7 @@ export default function IngredientCard({ ingredients, multiplier }: Props) {
       });
     } else {
       navigator.share({
-        text: "- " + ingredients.join("\n - "),
+        text: "- " + ingredients.join("\n- "),
       });
     }
   };
