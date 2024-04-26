@@ -1,22 +1,17 @@
 "use client";
 import Recipe from "@/components/recipe";
+import useHydration from "@/hooks/useHydration";
 import { useRecipeListStore } from "@/store/localStore";
 import { notFound, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const [isHydrated, setIsHydrated] = useState(false);
+  const isHydrated = useHydration();
 
   const { importedRecipes, removeRecipe } = useRecipeListStore(
     (state) => state,
   );
   const storedRecipe = importedRecipes.find((rcp) => rcp.id === params.id);
-
-  // Wait till Next.js rehydration completes
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
 
   const handleRemoveRecipe = () => {
     if (storedRecipe) {

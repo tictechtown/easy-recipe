@@ -1,25 +1,17 @@
+import useRecipeImport from "@/hooks/useRecipeImport";
+import { useRecipeListStore } from "@/store/localStore";
 import { useState } from "react";
 
-type Props = {
-  onImport: (text: string) => Promise<boolean>;
-};
+export default function EmptyCollection() {
+  const addRecipe = useRecipeListStore((state) => state.addRecipe);
 
-export default function EmptyCollection({ onImport }: Props) {
   const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showError, setShowError] = useState(false);
+
+  const [_handleRecipeImport, loading, error, setShowError] =
+    useRecipeImport(addRecipe);
 
   const handleRecipeImport = async () => {
-    setLoading(false);
-    try {
-      const result = await onImport(text);
-      setLoading(true);
-      if (!result) {
-        setShowError(true);
-      }
-    } catch (e) {
-      setShowError(true);
-    }
+    _handleRecipeImport(text);
   };
 
   return (
@@ -45,7 +37,7 @@ export default function EmptyCollection({ onImport }: Props) {
           </button>
         </div>
       </div>
-      {showError && (
+      {error && (
         <div
           role="alert"
           className="alert alert-error"

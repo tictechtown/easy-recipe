@@ -99,3 +99,9 @@ export type StoredRecipe = {
   favorite: boolean;
   storedUrl?: string;
 };
+
+export enum SortOption {
+  LAST_ADDED = "Newest",
+  NAME_AZ = "Name: A to Z",
+  NAME_ZA = "Name: Z to A",
+}

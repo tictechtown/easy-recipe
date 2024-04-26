@@ -1,31 +1,25 @@
 "use client";
+import useHydration from "@/hooks/useHydration";
+import useRecipeImport from "@/hooks/useRecipeImport";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import fetchUrl from "../lib/fetchUrl";
-import parseHtmlString from "../lib/parseHtmlString";
 import { useRecipeListStore } from "../store/localStore";
 
 export default function Home() {
   const router = useRouter();
+  const isHydrated = useHydration();
   const { importedRecipes, addRecipe } = useRecipeListStore((state) => state);
-  const [loading, setLoading] = useState(false);
   const [text, setText] = useState("");
-  const handleRecipeImport = async () => {
-    setLoading(true);
-    const htmlString = await fetchUrl(text);
-    const recipe = parseHtmlString(htmlString);
-    if (recipe) {
-      // add to list
-      addRecipe(recipe, text);
-    }
-    setLoading(false);
-  };
-
+  const [handleRecipeImport, loading] = useRecipeImport(addRecipe);
   useEffect(() => {
     if (importedRecipes.length > 0) {
       router.push("/recipes");
     }
   }, [router, importedRecipes]);
+
+  if (!isHydrated) {
+    return <main className="hero min-h-screen bg-base-200"></main>;
+  }
 
   return (
     <main className="hero min-h-screen bg-base-200">
@@ -61,7 +55,9 @@ export default function Home() {
             />
             <button
               className="btn btn-primary join-item rounded-r-full "
-              onClick={handleRecipeImport}
+              onClick={() => {
+                handleRecipeImport(text);
+              }}
             >
               {loading && <span className="loading loading-spinner"></span>}
               Get Started

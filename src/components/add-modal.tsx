@@ -2,28 +2,26 @@ import { useState } from "react";
 
 type Props = {
   onImport: (url: string) => Promise<boolean>;
+  loading: boolean;
 };
 
-export default function AddModal(props: Props) {
+export default function AddModal({ loading, onImport }: Props) {
   const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
+
   const [showError, setShowError] = useState(false);
 
   const handleRecipeImport = async () => {
-    setLoading(true);
     setShowError(false);
     try {
-      const res = await props.onImport(text);
+      const res = await onImport(text);
       if (res) {
         (document.getElementById("add-modal") as HTMLDialogElement)?.close();
       } else {
         setShowError(true);
       }
-      setLoading(false);
       setText("");
     } catch (e) {
       // error
-      setLoading(false);
       setText("");
       setShowError(true);
     }
@@ -31,7 +29,6 @@ export default function AddModal(props: Props) {
 
   const handleClose = () => {
     setText("");
-    setLoading(false);
     setShowError(false);
   };
 
