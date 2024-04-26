@@ -11,7 +11,7 @@ import {
 import { RecipeLD } from "../types";
 import AddTimerButton from "./recipes/add-timer-btn";
 import Clock from "./recipes/clock";
-import Ingredient from "./recipes/ingredient";
+import IngredientCard from "./recipes/ingredient-card";
 import RecipeInstructions from "./recipes/instructions";
 import Ratings from "./recipes/ratings";
 
@@ -106,14 +106,6 @@ export default function Recipe({ data, onDelete }: Props) {
   const recipeIngredient = Array.isArray(data.recipeIngredient)
     ? data.recipeIngredient
     : data.recipeIngredient?.split(", ") ?? [];
-
-  const handleExportIngredients = () => {
-    navigator.share({
-      title: `${data.name}`,
-      text: recipeIngredient.join("\n"),
-    });
-  };
-  const navigatorCanShare = !!navigator.share && navigator.canShare();
 
   const prepDuration = Duration.fromISO(data.prepTime);
   const cookDuration = Duration.fromISO(data.cookTime);
@@ -315,29 +307,10 @@ export default function Recipe({ data, onDelete }: Props) {
       </div>
 
       <div className="flex flex-col gap-4 md:flex-row md:gap-2 lg:gap-12	">
-        <div className="prose card card-compact mx-4 bg-base-200 sm:card-normal md:basis-2/5 lg:mx-auto">
-          <div className="card-body ">
-            <h2 className="not-prose card-title">Ingredients</h2>
-
-            <ul className="my-0 sm:my-1">
-              {recipeIngredient.map((rI, index) => (
-                <li key={index + 1}>
-                  <Ingredient ig={rI} multiplier={multiplier} />
-                </li>
-              ))}
-            </ul>
-            {navigatorCanShare && (
-              <p className="not-prose flex flex-row items-end justify-end">
-                <button
-                  className="btn btn-link items-end justify-end"
-                  onClick={handleExportIngredients}
-                >
-                  Export
-                </button>
-              </p>
-            )}
-          </div>
-        </div>
+        <IngredientCard
+          ingredients={recipeIngredient}
+          multiplier={multiplier}
+        />
 
         <div className="prose card card-compact mx-4  bg-base-200 sm:card-normal sm:basis-3/5 lg:mx-auto">
           <div className="card-body">
