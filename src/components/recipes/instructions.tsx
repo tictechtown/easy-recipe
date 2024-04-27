@@ -52,9 +52,14 @@ function InstructionBlock({
                 />
               </svg>
               {match
-                .replace("minutes", "mins")
-                .replace("minute", "min")
-                .replace("hours", "h")}
+                .replace("minutes", "m")
+                .replace("minute", "m")
+                .replace("weeks", "w")
+                .replace("week", "w")
+                .replace("days", "d")
+                .replace("day", "d")
+                .replace("hours", "h")
+                .replace("hour", "h")}
             </span>
           ))}
         </div>
