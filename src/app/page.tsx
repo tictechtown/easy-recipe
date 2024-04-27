@@ -10,7 +10,7 @@ export default function Home() {
   const isHydrated = useHydration();
   const { importedRecipes, addRecipe } = useRecipeListStore((state) => state);
   const [text, setText] = useState("");
-  const [handleRecipeImport, loading] = useRecipeImport(addRecipe);
+  const [handleRecipeImport, loading, showError] = useRecipeImport(addRecipe);
   useEffect(() => {
     if (importedRecipes.length > 0) {
       router.push("/recipes");
@@ -51,7 +51,7 @@ export default function Home() {
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="https://"
-              className="focus-ring input join-item input-bordered flex basis-4/5 rounded-l-full"
+              className={`focus-ring input join-item input-bordered flex basis-4/5 rounded-l-full ${showError && "input-error"}`}
             />
             <button
               className="btn btn-primary join-item rounded-r-full "
@@ -63,6 +63,11 @@ export default function Home() {
               Get Started
             </button>
           </div>
+          {showError && (
+            <span className="text-sm font-bold text-error">
+              Error importing the recipe
+            </span>
+          )}
         </div>
       </div>
     </main>
