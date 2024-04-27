@@ -2,7 +2,7 @@
 import HomeMenu from "@/components/home-menu";
 import useFilteredRecipes from "@/hooks/useFilteredRecipes";
 import useHydration from "@/hooks/useHydration";
-import { SortOption } from "@/types";
+import { SortOption, StoredRecipe } from "@/types";
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import EmptyCollection from "../../components/empty-collection";
@@ -10,7 +10,9 @@ import GridRecipe from "../../components/grid-recipe";
 import { useRecipeListStore } from "../../store/localStore";
 
 export default function Page() {
-  const { importedRecipes } = useRecipeListStore((state) => state);
+  const { importedRecipes, removeRecipe } = useRecipeListStore(
+    (state) => state,
+  );
   const isHydrated = useHydration();
 
   const [sortOption, setSortOption] = useState<SortOption>(
@@ -30,6 +32,10 @@ export default function Page() {
 
   const handleKeywordToggle = (word: string) => {
     setKeywordOption((prev) => (prev === word ? null : word));
+  };
+
+  const handleRemoveRecipe = (rcp: StoredRecipe) => {
+    removeRecipe(rcp);
   };
 
   const [filteredRecipes, keywords] = useFilteredRecipes(
@@ -77,7 +83,7 @@ export default function Page() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-4">
         {filteredRecipes.map((rcp) => (
           <Link key={rcp.id} href={`/recipes/${rcp.id}`}>
-            <GridRecipe data={rcp} />
+            <GridRecipe data={rcp} onRemove={handleRemoveRecipe} />
           </Link>
         ))}
       </div>

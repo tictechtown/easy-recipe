@@ -17,7 +17,7 @@ import Ratings from "./recipes/ratings";
 
 type Props = {
   data: RecipeLD;
-  onDelete: (recipe: RecipeLD) => void;
+  onRemove: (recipe: RecipeLD) => void;
 };
 
 type RecipeTimer = {
@@ -26,7 +26,7 @@ type RecipeTimer = {
   end: number;
 };
 
-export default function Recipe({ data, onDelete }: Props) {
+export default function Recipe({ data, onRemove }: Props) {
   const [multiplier, setMultiplier] = useState(1);
   const [showStepper, setShowStepper] = useState(false);
   const [timers, setTimers] = useState<RecipeTimer[]>([]);
@@ -402,7 +402,7 @@ export default function Recipe({ data, onDelete }: Props) {
 
       <button
         className="btn btn-outline btn-error btn-error mx-4 mt-16 lg:mx-0"
-        onClick={() => onDelete(data)}
+        onClick={() => onRemove(data)}
       >
         Delete
       </button>

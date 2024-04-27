@@ -3,10 +3,12 @@ import Recipe from "@/components/recipe";
 import useHydration from "@/hooks/useHydration";
 import { useRecipeListStore } from "@/store/localStore";
 import { notFound, useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter();
   const isHydrated = useHydration();
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const { importedRecipes, removeRecipe } = useRecipeListStore(
     (state) => state,
@@ -15,13 +17,18 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const handleRemoveRecipe = () => {
     if (storedRecipe) {
-      router.replace("/recipes");
+      setIsDeleted(true);
       removeRecipe(storedRecipe);
+      router.replace("/recipes");
     }
   };
 
   if (storedRecipe) {
-    return <Recipe data={storedRecipe.recipe} onDelete={handleRemoveRecipe} />;
+    return <Recipe data={storedRecipe.recipe} onRemove={handleRemoveRecipe} />;
+  }
+
+  if (isDeleted) {
+    return <main className="h-screen"></main>;
   }
 
   if (params.id && isHydrated) {
