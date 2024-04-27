@@ -13,20 +13,14 @@ export default function IngredientCard({ ingredients, multiplier }: Props) {
   const selectedCount = selectedIngredients.filter((s) => s.selected).length;
 
   const handleExportIngredients = () => {
-    if (selectedCount > 0) {
-      navigator.share({
-        text:
-          "- " +
-          selectedIngredients
-            .filter((s) => s.selected)
-            .map((s) => s.ig)
-            .join("\n - "),
-      });
-    } else {
-      navigator.share({
-        text: "- " + ingredients.join("\n- "),
-      });
-    }
+    navigator.share({
+      text:
+        "- " +
+        selectedIngredients
+          .filter((s) => !s.selected)
+          .map((s) => s.ig)
+          .join("\n - "),
+    });
   };
 
   const handleSelectedIngredient = (ingredient: {
