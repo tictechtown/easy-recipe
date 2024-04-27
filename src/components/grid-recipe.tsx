@@ -3,7 +3,7 @@ import { StoredRecipe } from "../types";
 
 type Props = {
   data: StoredRecipe;
-  onRemove: (rcp: StoredRecipe, e: any) => void;
+  onRemove: (rcp: StoredRecipe) => void;
 };
 
 export default function GridRecipe({ data, onRemove }: Props) {
@@ -23,7 +23,7 @@ export default function GridRecipe({ data, onRemove }: Props) {
         <h6 className="card-title text-sm text-primary">{recipe.name}</h6>
       </div>
       <div
-        onClick={(e) => onRemove(rcp, e)}
+        onClick={(e) => onRemove(data)}
         className="card-actions items-center justify-center rounded-r-xl bg-base-300 px-8"
       >
         <svg
