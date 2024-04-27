@@ -2,6 +2,7 @@ import he from "he";
 import { Duration } from "luxon";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
 import {
+  convertToArrayIfNeeded,
   parseBrandLogo,
   parseBrandName,
   parseRecipeImage,
@@ -114,17 +115,8 @@ export default function Recipe({ data, onRemove }: Props) {
     totalDuration.toMillis() !=
     prepDuration.toMillis() + cookDuration.toMillis();
 
-  const cuisines = Array.isArray(data.recipeCuisine)
-    ? data.recipeCuisine
-    : data.recipeCuisine
-      ? [data.recipeCuisine]
-      : [];
-
-  const categories = Array.isArray(data.recipeCategory)
-    ? data.recipeCategory
-    : data.recipeCategory
-      ? [data.recipeCategory]
-      : [];
+  const cuisines = convertToArrayIfNeeded(data.recipeCuisine);
+  const categories = convertToArrayIfNeeded(data.recipeCategory);
 
   const ratingValue = !data.aggregateRating
     ? 0

@@ -1,17 +1,10 @@
-import { sortRecipeByNameAsc, sortRecipeByNameDesc } from "@/lib/utils";
+import {
+  convertToArrayIfNeeded,
+  sortRecipeByNameAsc,
+  sortRecipeByNameDesc,
+} from "@/lib/utils";
 import { SortOption, StoredRecipe } from "@/types";
 import { useMemo } from "react";
-
-function convertToArrayIfNeeded<T>(value: T | T[]): T[] {
-  if (value === undefined || value === null || value === "") {
-    return [];
-  }
-
-  if (Array.isArray(value)) {
-    return value;
-  }
-  return [value];
-}
 
 export default function useFilteredRecipes(
   recipes: StoredRecipe[],

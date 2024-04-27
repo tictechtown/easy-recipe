@@ -104,3 +104,16 @@ export function sortRecipeByNameDesc(
 ) {
   return -sortRecipeByNameAsc(recipeA, recipeB);
 }
+
+export function convertToArrayIfNeeded<T>(value: T | T[]): T[] {
+  if (value === undefined || value === null || value === "") {
+    return [];
+  }
+
+  if (Array.isArray(value)) {
+    return value;
+  } else if (typeof value === "string") {
+    return value.split(", ") as T[];
+  }
+  return [value];
+}
