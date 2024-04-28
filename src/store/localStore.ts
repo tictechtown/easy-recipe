@@ -7,6 +7,7 @@ interface RecipeListState {
   importedRecipes: StoredRecipe[];
   addRecipe: (recipe: RecipeLD, url: string) => void;
   removeRecipe: (recipe: StoredRecipe) => void;
+  updateRecipeMultiplier: (recipe: StoredRecipe, multiplier: number) => void;
 }
 
 export const useRecipeListStore = create<RecipeListState>()(
@@ -39,7 +40,21 @@ export const useRecipeListStore = create<RecipeListState>()(
             (rc) => rc.id !== recipe.id,
           ),
         })),
+      updateRecipeMultiplier: (recipe: StoredRecipe, multiplier: number) =>
+        set((state) => {
+          const index = state.importedRecipes.findIndex(
+            (rc) => rc.id === recipe.id,
+          );
+          if (index > -1) {
+            state.importedRecipes[index] = {
+              ...state.importedRecipes[index],
+              multiplier,
+            };
+          }
+          return state;
+        }),
     }),
+
     {
       name: "recipe-list",
     },

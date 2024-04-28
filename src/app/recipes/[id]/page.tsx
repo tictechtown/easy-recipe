@@ -2,6 +2,7 @@
 import Recipe from "@/components/recipe";
 import useHydration from "@/hooks/useHydration";
 import { useRecipeListStore } from "@/store/localStore";
+import { StoredRecipe } from "@/types";
 import { notFound, useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -10,9 +11,8 @@ export default function Page({ params }: { params: { id: string } }) {
   const isHydrated = useHydration();
   const [isDeleted, setIsDeleted] = useState(false);
 
-  const { importedRecipes, removeRecipe } = useRecipeListStore(
-    (state) => state,
-  );
+  const { importedRecipes, removeRecipe, updateRecipeMultiplier } =
+    useRecipeListStore((state) => state);
   const storedRecipe = importedRecipes.find((rcp) => rcp.id === params.id);
 
   const handleRemoveRecipe = () => {
@@ -23,8 +23,18 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   };
 
+  const handleUpdateMultiplier = (recipe: StoredRecipe, multiplier: number) => {
+    updateRecipeMultiplier(recipe, multiplier);
+  };
+
   if (storedRecipe) {
-    return <Recipe data={storedRecipe.recipe} onRemove={handleRemoveRecipe} />;
+    return (
+      <Recipe
+        data={storedRecipe}
+        onRemove={handleRemoveRecipe}
+        onUpdateMultiplier={handleUpdateMultiplier}
+      />
+    );
   }
 
   if (isDeleted) {

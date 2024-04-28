@@ -98,6 +98,7 @@ export type StoredRecipe = {
   dateAdded: Date;
   favorite: boolean;
   storedUrl?: string;
+  multiplier?: number;
 };
 
 export enum SortOption {

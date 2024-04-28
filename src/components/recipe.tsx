@@ -9,7 +9,7 @@ import {
   parseRecipeYield,
   round5,
 } from "../lib/utils";
-import { RecipeLD } from "../types";
+import { RecipeLD, StoredRecipe } from "../types";
 import AddTimerButton from "./recipes/add-timer-btn";
 import Clock from "./recipes/clock";
 import IngredientCard from "./recipes/ingredient-card";
@@ -17,8 +17,9 @@ import RecipeInstructions from "./recipes/instructions";
 import Ratings from "./recipes/ratings";
 
 type Props = {
-  data: RecipeLD;
+  data: StoredRecipe;
   onRemove: (recipe: RecipeLD) => void;
+  onUpdateMultiplier: (recipe: StoredRecipe, multiplier: number) => void;
 };
 
 type RecipeTimer = {
@@ -27,11 +28,12 @@ type RecipeTimer = {
   end: number;
 };
 
-export default function Recipe({ data, onRemove }: Props) {
-  const [multiplier, setMultiplier] = useState(1);
+export default function Recipe({ data, onRemove, onUpdateMultiplier }: Props) {
+  const { recipe } = data;
+  const [multiplier, setMultiplier] = useState(data.multiplier ?? 1);
   const [showStepper, setShowStepper] = useState(false);
   const [timers, setTimers] = useState<RecipeTimer[]>([]);
-  const recipeYield = parseRecipeYield(data.recipeYield);
+  const recipeYield = parseRecipeYield(recipe.recipeYield);
 
   const handleShowStepper = () => {
     setShowStepper((prev) => !prev);
@@ -66,6 +68,7 @@ export default function Recipe({ data, onRemove }: Props) {
   };
 
   const handleMultiplierChange = (e: ChangeEvent<any>) => {
+    onUpdateMultiplier(data, +e.target.value / recipeYield); // this update the saved value
     setMultiplier(+e.target.value / recipeYield);
   };
 
@@ -104,34 +107,39 @@ export default function Recipe({ data, onRemove }: Props) {
     ]);
   };
 
-  const recipeIngredient = Array.isArray(data.recipeIngredient)
-    ? data.recipeIngredient
-    : data.recipeIngredient?.split(", ") ?? [];
+  const handleReset = () => {
+    onUpdateMultiplier(data, 1); // this update the saved value
+    setMultiplier(1);
+  };
 
-  const prepDuration = Duration.fromISO(data.prepTime);
-  const cookDuration = Duration.fromISO(data.cookTime);
-  const totalDuration = Duration.fromISO(data.totalTime);
+  const recipeIngredient = Array.isArray(recipe.recipeIngredient)
+    ? recipe.recipeIngredient
+    : recipe.recipeIngredient?.split(", ") ?? [];
+
+  const prepDuration = Duration.fromISO(recipe.prepTime);
+  const cookDuration = Duration.fromISO(recipe.cookTime);
+  const totalDuration = Duration.fromISO(recipe.totalTime);
   const includeTotalDuration =
     totalDuration.toMillis() !=
     prepDuration.toMillis() + cookDuration.toMillis();
 
-  const cuisines = convertToArrayIfNeeded(data.recipeCuisine);
-  const categories = convertToArrayIfNeeded(data.recipeCategory);
+  const cuisines = convertToArrayIfNeeded(recipe.recipeCuisine);
+  const categories = convertToArrayIfNeeded(recipe.recipeCategory);
 
-  const ratingValue = !data.aggregateRating
+  const ratingValue = !recipe.aggregateRating
     ? 0
     : round5(
-        +data.aggregateRating.ratingValue * 10,
+        +recipe.aggregateRating.ratingValue * 10,
       ); /* value between 0 and 50, with 5 increment*/
 
-  const imageUrl = parseRecipeImage(data.image);
+  const imageUrl = parseRecipeImage(recipe.image);
 
   const brandName = parseBrandName(
-    data.publisher?.brand ?? data.publisher?.name,
-    data.url,
+    recipe.publisher?.brand ?? recipe.publisher?.name,
+    recipe.url,
   );
 
-  const brandLogo = parseBrandLogo(data.publisher);
+  const brandLogo = parseBrandLogo(recipe.publisher);
 
   return (
     <div className="container flex max-w-4xl animate-fade-in-move-down flex-col gap-4 py-4 md:gap-8 md:py-8">
@@ -146,14 +154,14 @@ export default function Recipe({ data, onRemove }: Props) {
           <div className="card-body">
             <hgroup>
               <h2 className="card-title text-2xl text-primary sm:text-4xl md:text-5xl">
-                {data.name}
+                {recipe.name}
               </h2>
-              {data.aggregateRating && (
+              {recipe.aggregateRating && (
                 <Ratings
                   ratingValue={ratingValue}
                   ratingCount={`${
-                    data.aggregateRating?.ratingCount ??
-                    data.aggregateRating?.reviewCount ??
+                    recipe.aggregateRating?.ratingCount ??
+                    recipe.aggregateRating?.reviewCount ??
                     "0"
                   }`}
                 />
@@ -161,7 +169,7 @@ export default function Recipe({ data, onRemove }: Props) {
             </hgroup>
 
             <div className="py-2">
-              {!!data.description && <>{he.decode(data.description)}</>}
+              {!!recipe.description && <>{he.decode(recipe.description)}</>}
               <div className="my-1 flex flex-row gap-2 *:cursor-pointer">
                 {categories.map((cat) => (
                   <div
@@ -183,7 +191,7 @@ export default function Recipe({ data, onRemove }: Props) {
             </div>
             <div className="card-actions">
               <a
-                href={data.url}
+                href={recipe.url}
                 className="btn btn-outline btn-sm"
                 target="_blank"
               >
@@ -222,7 +230,7 @@ export default function Recipe({ data, onRemove }: Props) {
         <div className="stats card-bordered stats-horizontal mx-4 overflow-hidden md:stats-vertical">
           {includeTotalDuration && totalDuration.isValid && (
             <div className="stat">
-              <div className="text-md stat-title md:text-lg">Total Time</div>
+              <div className="md:text-md stat-title text-sm">Total Time</div>
               <div className="stat-value text-2xl md:text-3xl">
                 {totalDuration
                   .normalize()
@@ -234,7 +242,7 @@ export default function Recipe({ data, onRemove }: Props) {
 
           {prepDuration.isValid && prepDuration.toMillis() !== 0 && (
             <div className="stat">
-              <div className="text-md stat-title md:text-lg">Prep Time</div>
+              <div className="md:text-md stat-title text-sm">Prep Time</div>
               <div className="stat-value text-2xl md:text-3xl">
                 {prepDuration
                   .normalize()
@@ -246,7 +254,7 @@ export default function Recipe({ data, onRemove }: Props) {
 
           {cookDuration.isValid && cookDuration.toMillis() !== 0 && (
             <div className="stat">
-              <div className="text-md stat-title md:text-lg">Cook Time</div>
+              <div className="md:text-md stat-title text-sm">Cook Time</div>
               <div className="stat-value text-2xl md:text-3xl">
                 {cookDuration
                   .normalize()
@@ -257,7 +265,7 @@ export default function Recipe({ data, onRemove }: Props) {
           )}
 
           <div className="stat overflow-hidden">
-            <div className="text-md stat-title md:text-lg">Yield</div>
+            <div className="md:text-md stat-title text-sm">Yield</div>
             <div
               className="stat-value text-2xl md:text-3xl"
               onClick={handleForceShowStepper}
@@ -294,6 +302,13 @@ export default function Recipe({ data, onRemove }: Props) {
                 ></path>
               </svg>
             </div>
+            <div className="">
+              {multiplier !== 1.0 && (
+                <button className="btn btn-link" onClick={handleReset}>
+                  Reset
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -307,9 +322,9 @@ export default function Recipe({ data, onRemove }: Props) {
         <div className="prose card card-compact mx-4  bg-base-200 sm:card-normal sm:basis-3/5 lg:mx-auto">
           <div className="card-body">
             <h2 className="not-prose card-title">Steps</h2>
-            {data.recipeInstructions && (
+            {recipe.recipeInstructions && (
               <RecipeInstructions
-                instructions={data.recipeInstructions}
+                instructions={recipe.recipeInstructions}
                 onAddTimer={handleAddTimerFromInstruction}
               />
             )}
@@ -321,49 +336,49 @@ export default function Recipe({ data, onRemove }: Props) {
         <div className="prose card card-compact mx-4 bg-base-200 sm:card-normal lg:mx-0 xl:basis-1/3">
           <div className="card-body">
             <h2 className="not-prose card-title">Nutritions</h2>
-            {data.nutrition && (
+            {recipe.nutrition && (
               <div className="overflow-x-auto">
                 <table className="table">
                   <tbody>
                     <tr>
                       <th>Calories</th>
-                      <td>{data.nutrition.calories ?? "-"}</td>
+                      <td>{recipe.nutrition.calories ?? "-"}</td>
                     </tr>
                     <tr>
                       <th>Carbs</th>
-                      <td>{data.nutrition.carbohydrateContent ?? "-"}</td>
+                      <td>{recipe.nutrition.carbohydrateContent ?? "-"}</td>
                     </tr>
                     <tr>
                       <th>Cholesterol</th>
-                      <td>{data.nutrition.cholesterolContent ?? "-"}</td>
+                      <td>{recipe.nutrition.cholesterolContent ?? "-"}</td>
                     </tr>
                     <tr>
                       <th>Fiber</th>
-                      <td>{data.nutrition.fiberContent ?? "-"}</td>
+                      <td>{recipe.nutrition.fiberContent ?? "-"}</td>
                     </tr>
                     <tr>
                       <th>Protein</th>
-                      <td>{data.nutrition.proteinContent ?? "-"}</td>
+                      <td>{recipe.nutrition.proteinContent ?? "-"}</td>
                     </tr>
                     <tr>
                       <th>Sodium</th>
-                      <td>{data.nutrition.sodiumContent ?? "-"}</td>
+                      <td>{recipe.nutrition.sodiumContent ?? "-"}</td>
                     </tr>
                     <tr>
                       <th>Sugar</th>
-                      <td>{data.nutrition.sugarContent ?? "-"}</td>
+                      <td>{recipe.nutrition.sugarContent ?? "-"}</td>
                     </tr>
                     <tr>
                       <th>Fat</th>
-                      <td>{data.nutrition.fatContent ?? "-"}</td>
+                      <td>{recipe.nutrition.fatContent ?? "-"}</td>
                     </tr>
                     <tr>
                       <th>Saturated Fat</th>
-                      <td>{data.nutrition.saturatedFatContent ?? "-"}</td>
+                      <td>{recipe.nutrition.saturatedFatContent ?? "-"}</td>
                     </tr>
                     <tr>
                       <th>Unsaturated Fat</th>
-                      <td>{data.nutrition.unsaturatedFatContent ?? "-"}</td>
+                      <td>{recipe.nutrition.unsaturatedFatContent ?? "-"}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -372,7 +387,7 @@ export default function Recipe({ data, onRemove }: Props) {
           </div>
         </div>
 
-        <div className="card card-bordered card-compact mx-4  bg-base-100  sm:card-normal lg:mx-0 xl:basis-2/3">
+        <div className="card card-bordered card-compact mx-4  bg-base-100  sm:card-normal md:basis-2/3 lg:mx-0">
           <div className="card-body">
             <h2 className="card-title">Timers</h2>
             <div className="flex flex-col gap-6">
@@ -394,7 +409,7 @@ export default function Recipe({ data, onRemove }: Props) {
 
       <button
         className="btn btn-outline btn-error btn-error mx-4 mt-16 lg:mx-0"
-        onClick={() => onRemove(data)}
+        onClick={() => onRemove(recipe)}
       >
         Delete
       </button>
