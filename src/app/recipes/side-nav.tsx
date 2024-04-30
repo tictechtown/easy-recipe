@@ -99,7 +99,7 @@ export default function SideNav({
           <li key={rcp.id}>
             <Link
               href={`/recipes/${rcp.id}`}
-              className={`group flex ${pathname === `/${rcp.id}`}`}
+              className={`group flex ${pathname === `/recipes/${rcp.id}` && "active"}`}
             >
               <div
                 className="flex w-full flex-row justify-between"

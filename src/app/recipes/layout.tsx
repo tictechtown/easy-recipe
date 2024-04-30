@@ -1,6 +1,7 @@
 "use client";
 import SideNav from "@/app/recipes/side-nav";
 import useRecipeImport from "@/hooks/useRecipeImport";
+import { usePathname, useRouter } from "next/navigation";
 import AddModal from "../../components/add-modal";
 import { useRecipeListStore } from "../../store/localStore";
 import { StoredRecipe } from "../../types";
@@ -13,6 +14,9 @@ export default function Layout({
   children: React.ReactNode;
   params: { id?: string };
 }>) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const { importedRecipes, addRecipe, removeRecipe } = useRecipeListStore(
     (state) => state,
   );
@@ -24,7 +28,12 @@ export default function Layout({
     e: React.MouseEvent<SVGSVGElement, MouseEvent>,
   ) => {
     e.preventDefault();
-    removeRecipe(rcp);
+    if (pathname === `/recipes/${rcp.id}`) {
+      router.replace("/recipes");
+    }
+    setTimeout(() => {
+      removeRecipe(rcp);
+    }, 100);
   };
 
   const handleAddRecipe = () => {
