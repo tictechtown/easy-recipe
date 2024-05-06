@@ -170,7 +170,7 @@ export default function Recipe({ data, onRemove, onUpdateMultiplier }: Props) {
 
             <div className="py-2">
               {!!recipe.description && <>{he.decode(recipe.description)}</>}
-              <div className="my-1 flex flex-row gap-2 *:cursor-pointer">
+              <div className="my-1 flex flex-row flex-wrap gap-2 *:cursor-pointer">
                 {categories.map((cat) => (
                   <div
                     key={cat}
@@ -387,7 +387,7 @@ export default function Recipe({ data, onRemove, onUpdateMultiplier }: Props) {
           </div>
         </div>
 
-        <div className="card card-bordered card-compact mx-4  bg-base-100  sm:card-normal md:basis-2/3 lg:mx-0">
+        <div className="card card-bordered card-compact mx-4  border-neutral  bg-base-100 sm:card-normal md:basis-2/3 lg:mx-0">
           <div className="card-body">
             <h2 className="card-title">Timers</h2>
             <div className="flex flex-col gap-6">

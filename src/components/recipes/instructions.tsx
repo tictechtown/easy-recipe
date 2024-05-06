@@ -34,7 +34,7 @@ function InstructionBlock({
         {he.decode(value as string)}
       </li>
       {matches && matches?.length > 0 && (
-        <div className="ml-12 flex flex-row gap-2">
+        <div className="ml-12 flex flex-row flex-wrap gap-2">
           {matches?.map((match, index) => (
             <span
               key={match + index}
