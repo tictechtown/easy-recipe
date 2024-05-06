@@ -1,6 +1,6 @@
 {
-  "name": "My Awesome PWA app",
-  "short_name": "PWA App",
+  "name": "My Easy Recipes",
+  "short_name": "EasyRecipe",
   "icons": [
     {
       "src": "/icons/android-chrome-192x192.png",
@@ -14,7 +14,6 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
   "start_url": "/",
   "display": "standalone",
