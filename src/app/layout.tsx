@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -12,12 +12,7 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "default",
     title: "My Easy Recipes",
-    // startUpImage: [],
   },
-};
-
-export const viewport: Viewport = {
-  themeColor: "#FFFFFF",
 };
 
 export default function RootLayout({
@@ -26,10 +21,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" /*data-theme="retro"*/>
+    <html lang="en">
       <meta
         name="viewport"
         content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
+      />
+      <meta
+        name="theme-color"
+        media="(prefers-color-scheme: dark)"
+        content="#000000"
+      />
+      <meta
+        name="theme-color"
+        media="(prefers-color-scheme: light)"
+        content="#ffffff"
       />
 
       <body className={inter.className}>{children}</body>
