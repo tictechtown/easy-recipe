@@ -11,9 +11,11 @@ export default function Page({ params }: { params: { id: string } }) {
   const isHydrated = useHydration();
   const [isDeleted, setIsDeleted] = useState(false);
 
+  const paramId = decodeURIComponent(params.id).replace("%3A", ":");
+
   const { importedRecipes, removeRecipe, updateRecipeMultiplier } =
     useRecipeListStore((state) => state);
-  const storedRecipe = importedRecipes.find((rcp) => rcp.id === params.id);
+  const storedRecipe = importedRecipes.find((rcp) => rcp.id === paramId);
 
   const handleRemoveRecipe = () => {
     if (storedRecipe) {

@@ -90,6 +90,11 @@ export type RecipeLD = {
   review?: ReviewLD[];
   mainEntityOfPage?: any;
   url: string;
+  estimatedCost?: {
+    "@type": "MonetaryAmount";
+    currency: string;
+    value: string;
+  };
 };
 
 export type StoredRecipe = {
