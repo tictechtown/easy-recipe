@@ -1,6 +1,6 @@
 import { Duration } from "luxon";
 import { parseIngredient } from "parse-ingredient";
-import { ImageLD, RecipeLD, StoredRecipe } from "../types";
+import { ImageLD, RecipeLD, StoredRecipe, SupaRecipe } from "../types";
 
 export function round5(x: number) {
   return Math.ceil(x / 5) * 5;
@@ -116,4 +116,30 @@ export function convertToArrayIfNeeded<T>(value: T | T[]): T[] {
     return value.split(", ") as T[];
   }
   return [value];
+}
+
+export function convertStoreRecipeToSupaRecipe(
+  recipe: StoredRecipe,
+  userId: string,
+): Partial<SupaRecipe> {
+  const rcp: Partial<SupaRecipe> = {
+    id: recipe.supaId,
+    user_id: userId,
+    updated_at: recipe.updatedAt
+      ? new Date(recipe.updatedAt).toISOString()
+      : null,
+    blob: JSON.stringify(recipe.recipe),
+    multiplier: recipe.multiplier,
+    favorite: recipe.favorite,
+  };
+
+  if (!rcp.id) {
+    delete rcp["id"];
+  }
+
+  if (!rcp.id) {
+    delete rcp["updated_at"];
+  }
+
+  return rcp;
 }
