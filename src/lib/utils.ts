@@ -119,6 +119,20 @@ export function convertToArrayIfNeeded<T>(value: T | T[]): T[] {
   return [value];
 }
 
+function convertTimestampToDate(
+  value: number | undefined | null,
+): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+  const date = new Date(value);
+  try {
+    return date.toISOString();
+  } catch {
+    return undefined;
+  }
+}
+
 export function convertStoreRecipeToSupaRecipe(
   recipe: StoredRecipe,
   userId: string,
@@ -126,15 +140,9 @@ export function convertStoreRecipeToSupaRecipe(
   const rcp: Partial<SupaRecipe> = {
     id: recipe.supaId ?? undefined,
     user_id: userId,
-    added_at: recipe.addedAt
-      ? new Date(recipe.updatedAt).toISOString()
-      : undefined,
-    updated_at: recipe.updatedAt
-      ? new Date(recipe.updatedAt).toISOString()
-      : undefined,
-    deleted_at: recipe.deletedAt
-      ? new Date(recipe.updatedAt).toISOString()
-      : undefined,
+    added_at: convertTimestampToDate(recipe.addedAt),
+    updated_at: convertTimestampToDate(recipe.updatedAt),
+    deleted_at: convertTimestampToDate(recipe.deletedAt),
     blob: JSON.stringify(recipe.recipe),
     multiplier: recipe.multiplier,
     favorite: recipe.favorite,
