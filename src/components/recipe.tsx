@@ -144,7 +144,7 @@ export default function Recipe({ data, onRemove, onUpdateMultiplier }: Props) {
 
   return (
     <div className="container flex max-w-4xl animate-fade-in-move-down flex-col gap-4 pb-4 md:gap-8 md:pb-8">
-      <div className="flex flex-none">
+      <div className="flex flex-none px-2 lg:px-0">
         <Link href={`/recipes/`}>
           <div className="flex flex-none flex-row content-center gap-2 hover:underline">
             <svg
