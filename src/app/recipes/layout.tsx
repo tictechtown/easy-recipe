@@ -1,5 +1,6 @@
 "use client";
 import SideNav from "@/app/recipes/side-nav";
+import useAvailableRecipes from "@/hooks/useAvailableRecipes";
 import useRecipeImport from "@/hooks/useRecipeImport";
 import { usePathname, useRouter } from "next/navigation";
 import AddModal from "../../components/add-modal";
@@ -17,9 +18,9 @@ export default function Layout({
   const router = useRouter();
   const pathname = usePathname();
 
-  const { importedRecipes, addRecipe, removeRecipe } = useRecipeListStore(
-    (state) => state,
-  );
+  const { addRecipe, removeRecipe } = useRecipeListStore((state) => state);
+
+  const recipes = useAvailableRecipes();
 
   const [handleRecipeImport, loading] = useRecipeImport(addRecipe);
 
@@ -61,7 +62,7 @@ export default function Layout({
           <SideNav
             loading={loading}
             onAdd={handleAddRecipe}
-            recipesHistory={importedRecipes}
+            recipesHistory={recipes}
             onRemove={handleRemoveRecipe}
           />
         </div>

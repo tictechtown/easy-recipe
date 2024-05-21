@@ -1,4 +1,5 @@
 "use client";
+import useAvailableRecipes from "@/hooks/useAvailableRecipes";
 import useHydration from "@/hooks/useHydration";
 import useRecipeImport from "@/hooks/useRecipeImport";
 import { useRouter } from "next/navigation";
@@ -8,14 +9,15 @@ import { useRecipeListStore } from "../store/localStore";
 export default function Home() {
   const router = useRouter();
   const isHydrated = useHydration();
-  const { importedRecipes, addRecipe } = useRecipeListStore((state) => state);
+  const { addRecipe } = useRecipeListStore((state) => state);
+  const recipes = useAvailableRecipes();
   const [text, setText] = useState("");
   const [handleRecipeImport, loading, showError] = useRecipeImport(addRecipe);
   useEffect(() => {
-    if (importedRecipes.length > 0) {
+    if (recipes.length > 0) {
       router.push("/recipes");
     }
-  }, [router, importedRecipes]);
+  }, [router, recipes]);
 
   if (!isHydrated) {
     return <main className="hero min-h-screen bg-base-200"></main>;

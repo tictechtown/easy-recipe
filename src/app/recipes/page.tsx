@@ -1,6 +1,7 @@
 "use client";
 import HomeMenu from "@/components/home-menu";
 import SignedUserButton from "@/components/signed-user-btn";
+import useAvailableRecipes from "@/hooks/useAvailableRecipes";
 import useFilteredRecipes from "@/hooks/useFilteredRecipes";
 import useHydration from "@/hooks/useHydration";
 import useAuthSession from "@/hooks/useSession";
@@ -12,9 +13,9 @@ import GridRecipe from "../../components/grid-recipe";
 import { useRecipeListStore } from "../../store/localStore";
 
 export default function Page() {
-  const { importedRecipes, removeRecipe } = useRecipeListStore(
-    (state) => state,
-  );
+  const { removeRecipe } = useRecipeListStore((state) => state);
+
+  const recipes = useAvailableRecipes();
   const isHydrated = useHydration();
 
   const session = useAuthSession();
@@ -43,7 +44,7 @@ export default function Page() {
   };
 
   const [filteredRecipes, keywords] = useFilteredRecipes(
-    importedRecipes,
+    recipes,
     sortOption,
     searchText,
     keywordOption,
@@ -53,7 +54,7 @@ export default function Page() {
     return <></>;
   }
 
-  if (isHydrated && importedRecipes.length === 0) {
+  if (isHydrated && recipes.length === 0) {
     return (
       <div className="align-center container prose flex h-screen max-w-4xl flex-col gap-8 px-4 py-12 lg:px-0">
         <EmptyCollection />

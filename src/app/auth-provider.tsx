@@ -1,86 +1,97 @@
 "use client";
 import useHydration from "@/hooks/useHydration";
 import useAuthSession from "@/hooks/useSession";
-import supabase from "@/lib/supabase";
+import { pushChanges, pushLastUpdateTimestamp } from "@/lib/supabase/mutations";
+import {
+  pullLastUpdateTimestamp,
+  pullRecipeChangesSince,
+} from "@/lib/supabase/queries";
 import { convertStoreRecipeToSupaRecipe } from "@/lib/utils";
-import { RecipeListState, useRecipeListStore } from "@/store/localStore";
+import {
+  RecipeListState,
+  storeUpdateEmitter,
+  useRecipeListStore,
+} from "@/store/localStore";
+import { SupaRecipe } from "@/types";
 import { useRef } from "react";
 
 async function startSyncing(userId: string, state: RecipeListState) {
   const {
     syncRecipes,
-    updateRecipe,
     lastRefreshTimestamp,
     importedRecipes,
     updateRefreshTimestamp,
   } = state;
 
-  const { data, error } = await supabase
-    .from("Sync")
-    .select()
-    .eq("user_id", userId);
-  // TODO, fetch local store too
-  console.log("data,", data, error);
+  const { data, error } = await pullLastUpdateTimestamp(userId);
+  console.log("syncing data,", data, error);
 
   if (!data || data?.length === 0) {
-    const { data: inserted, error: insertedError } = await supabase
-      .from("Sync")
-      .insert({ user_id: userId })
-      .select();
+    const { data: inserted, error: insertedError } =
+      await pushLastUpdateTimestamp(userId);
     console.log("insert", inserted, insertedError);
     updateRefreshTimestamp(Date.now());
   } else {
+    console.log("lastRefreshTimestamp", lastRefreshTimestamp);
     const lastSyncTimestamp = Date.parse(data[0].updated_at);
-    if (!lastRefreshTimestamp || lastSyncTimestamp > lastRefreshTimestamp) {
+    if (!lastRefreshTimestamp || lastSyncTimestamp !== lastRefreshTimestamp) {
       // PULL
+      const { data: recipes, error: recipesError } =
+        await pullRecipeChangesSince(userId, lastRefreshTimestamp);
 
-      const queryPromise = lastRefreshTimestamp
-        ? supabase
-            .from("Recipe")
-            .select()
-            .filter("updated_at", "gt", lastRefreshTimestamp)
-        : supabase.from("Recipe").select();
+      // MERGE
+      syncRecipes(recipes as SupaRecipe[], lastSyncTimestamp);
 
-      const { data: recipes, error: recipesError } = await queryPromise;
-
-      syncRecipes(recipes, lastSyncTimestamp);
-      updateRefreshTimestamp(lastSyncTimestamp);
-    } else if (lastSyncTimestamp < lastRefreshTimestamp) {
       // PUSH
-      const updatedRecipes = importedRecipes.filter(
+      const localUpdatedRecipes = importedRecipes.filter(
         (rc) => rc.updatedAt && rc.updatedAt > lastSyncTimestamp,
       );
-      if (updatedRecipes.length > 0) {
-        console.log("updatedRecipes", updatedRecipes);
-        await supabase.from("Recipe").upsert(updatedRecipes);
-      }
+      const localAddedRecipes = importedRecipes.filter((rc) => !rc.supaId);
 
-      const addedRecipes = importedRecipes.filter((rc) => !rc.supaId);
-      if (addedRecipes.length > 0) {
-        console.log("added recipes", addedRecipes);
-        const { data: newRecipes, error: newError } = await supabase
-          .from("Recipe")
-          .insert(
-            addedRecipes.map((rc) =>
-              convertStoreRecipeToSupaRecipe(rc, userId),
-            ),
-          )
-          .select();
-        console.log("adta added", newRecipes);
-        for (let i = 0; i < addedRecipes.length; i++) {
-          updateRecipe(addedRecipes[i], newRecipes[i]);
-        }
-      }
-      console.log("updating ts", importedRecipes);
-      // sync timestamp
-      await supabase
-        .from("Sync")
-        .update({
-          updated_at: new Date(lastRefreshTimestamp).toISOString(),
-        })
-        .eq("user_id", userId);
+      const syncTimestamp = Math.max(
+        lastRefreshTimestamp ?? 0,
+        lastSyncTimestamp,
+      );
+
+      const addedSupaRecipes = await pushChanges(
+        localAddedRecipes.map((rc) =>
+          convertStoreRecipeToSupaRecipe(rc, userId),
+        ),
+        localUpdatedRecipes.map((rc) =>
+          convertStoreRecipeToSupaRecipe(rc, userId),
+        ),
+        userId,
+        syncTimestamp === lastSyncTimestamp ? undefined : syncTimestamp,
+      );
+
+      syncRecipes(addedSupaRecipes, syncTimestamp);
     }
   }
+
+  storeUpdateEmitter.on("recipe:add", ({ recipe, ts }) => {
+    pushChanges(
+      [convertStoreRecipeToSupaRecipe(recipe, userId)],
+      [],
+      userId,
+      ts,
+    );
+  });
+  storeUpdateEmitter.on("recipe:remove", ({ recipe, ts }) => {
+    pushChanges(
+      [],
+      [convertStoreRecipeToSupaRecipe(recipe, userId)],
+      userId,
+      ts,
+    );
+  });
+  storeUpdateEmitter.on("recipe:update", ({ recipe, ts }) => {
+    pushChanges(
+      [],
+      [convertStoreRecipeToSupaRecipe(recipe, userId)],
+      userId,
+      ts,
+    );
+  });
 }
 
 export default function AuthProvider({
@@ -94,9 +105,7 @@ export default function AuthProvider({
   const syncingRef = useRef(false);
   if (session && isHydrated && !syncingRef.current) {
     syncingRef.current = true;
-    startSyncing(session.user.id, state).then(() => {
-      syncingRef.current = false;
-    });
+    startSyncing(session.user.id, state);
   }
   return <>{children}</>;
 }

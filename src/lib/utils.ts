@@ -1,5 +1,6 @@
 import { Duration } from "luxon";
 import { parseIngredient } from "parse-ingredient";
+import slugify from "slugify";
 import { ImageLD, RecipeLD, StoredRecipe, SupaRecipe } from "../types";
 
 export function round5(x: number) {
@@ -123,11 +124,17 @@ export function convertStoreRecipeToSupaRecipe(
   userId: string,
 ): Partial<SupaRecipe> {
   const rcp: Partial<SupaRecipe> = {
-    id: recipe.supaId,
+    id: recipe.supaId ?? undefined,
     user_id: userId,
+    added_at: recipe.addedAt
+      ? new Date(recipe.updatedAt).toISOString()
+      : undefined,
     updated_at: recipe.updatedAt
       ? new Date(recipe.updatedAt).toISOString()
-      : null,
+      : undefined,
+    deleted_at: recipe.deletedAt
+      ? new Date(recipe.updatedAt).toISOString()
+      : undefined,
     blob: JSON.stringify(recipe.recipe),
     multiplier: recipe.multiplier,
     favorite: recipe.favorite,
@@ -137,9 +144,47 @@ export function convertStoreRecipeToSupaRecipe(
     delete rcp["id"];
   }
 
-  if (!rcp.id) {
+  if (!rcp.updated_at) {
     delete rcp["updated_at"];
   }
 
+  if (!rcp.deleted_at) {
+    delete rcp["deleted_at"];
+  }
+
   return rcp;
+}
+
+export function convertSupaRecipeToLocalRecipe(
+  supaRecipe: SupaRecipe,
+): StoredRecipe {
+  const recipeLD = JSON.parse(supaRecipe.blob);
+  const newId = slugify(recipeLD.name);
+  return {
+    id: newId,
+    supaId: supaRecipe.id,
+    recipe: recipeLD,
+    updatedAt: Date.parse(supaRecipe.updated_at),
+    addedAt: Date.parse(supaRecipe.added_at),
+    favorite: supaRecipe.favorite ?? false,
+    multiplier: supaRecipe.multiplier ? supaRecipe.multiplier : undefined,
+    deletedAt: supaRecipe.deleted_at
+      ? Date.parse(supaRecipe.deleted_at)
+      : undefined,
+  };
+}
+
+export function convertRecipeLDToLocalRecipe(
+  recipeLD: RecipeLD,
+  url: string,
+): StoredRecipe {
+  const newId = slugify(recipeLD.name);
+  return {
+    recipe: { ...recipeLD, url },
+    id: newId,
+    supaId: null,
+    addedAt: Date.now(),
+    updatedAt: Date.now(),
+    favorite: false,
+  };
 }

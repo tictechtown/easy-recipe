@@ -100,9 +100,10 @@ export type RecipeLD = {
 export type StoredRecipe = {
   id: string;
   supaId: string | null;
-  updatedAt: number | null;
+  addedAt: number;
+  updatedAt: number;
+  deletedAt?: number | null;
   recipe: RecipeLD;
-  dateAdded: Date;
   favorite: boolean;
   multiplier?: number;
 };
@@ -114,9 +115,11 @@ export enum SortOption {
 }
 
 export type SupaRecipe = {
-  id: string | null; // uuid
+  id: string; // uuid
   user_id: string;
-  updated_at: string | null; // ISO timestamp
+  added_at: string; // ISO timestamp
+  updated_at: string; // ISO timestamp
+  deleted_at: string | null;
   blob: string; // JSON string
   multiplier: number | undefined;
   favorite: boolean | undefined;
