@@ -13,14 +13,16 @@ const useAuthStore = create<AuthState>((set) => ({
   session: null,
   setSession: (session) => set({ session }),
   login: async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
 
     if (error) return Promise.reject(error);
 
+    const { data } = await supabase.auth.getSession();
+
     set({ session: data.session });
-    return Promise.resolve(data.user);
+    return Promise.resolve(data.session?.user ?? null);
   },
   logout: async () => {
     const { error } = await supabase.auth.signOut();
