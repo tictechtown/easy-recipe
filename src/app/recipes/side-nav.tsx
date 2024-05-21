@@ -22,7 +22,6 @@ export default function SideNav({
   const pathname = usePathname();
 
   const handleSideNavBlur = () => {
-    console.log(document.getElementById("small-drawer-btn")?.style.display);
     if (document.getElementById("small-drawer-btn")?.style.display !== "none") {
       (document.getElementById("drawer-nav") as HTMLInputElement).checked =
         false;

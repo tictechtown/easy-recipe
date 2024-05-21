@@ -13,13 +13,11 @@ function parseLDJSON(tags: NodeListOf<Element>): RecipeLD | undefined {
       if (!Array.isArray(obj)) {
         if (obj["@type"] === "Recipe") {
           foundRecipeObjects = obj;
-          console.log("found", foundRecipeObjects);
         } else if (Array.isArray(obj["@graph"])) {
           foundRecipeObjects = obj["@graph"] as RecipeLD | [RecipeLD];
         }
       } else {
         foundRecipeObjects = obj as RecipeLD | [RecipeLD];
-        console.log("found arra", foundRecipeObjects);
       }
     }
   });

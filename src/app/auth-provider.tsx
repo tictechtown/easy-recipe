@@ -24,15 +24,12 @@ async function startSyncing(userId: string, state: RecipeListState) {
   } = state;
 
   const { data, error } = await pullLastUpdateTimestamp(userId);
-  console.log("syncing data,", data, error);
 
   if (!data || data?.length === 0) {
     const { data: inserted, error: insertedError } =
       await pushLastUpdateTimestamp(userId);
-    console.log("insert", inserted, insertedError);
     updateRefreshTimestamp(Date.now());
   } else {
-    console.log("lastRefreshTimestamp", lastRefreshTimestamp);
     const lastSyncTimestamp = Date.parse(data[0].updated_at);
     if (!lastRefreshTimestamp || lastSyncTimestamp !== lastRefreshTimestamp) {
       // PULL

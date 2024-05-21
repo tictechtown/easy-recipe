@@ -18,7 +18,6 @@ export default function SignedUserButton() {
       },
     });
     const { data, error } = await supabase.from("sync").select();
-    console.log("fetching last sync", data, error);
     setLoading(false);
   };
 
