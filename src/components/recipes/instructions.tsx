@@ -10,6 +10,33 @@ type Props = {
 const regexValue =
   /\b(\d+(?:\.\d+)?)(?:\s*)(min|mins|minute|minutes|hours|hour|days|day|weeks|week)\b/gm;
 
+function formatDecodedText(
+  text: string,
+  matches: RegExpMatchArray | null,
+): string | (string | JSX.Element)[] {
+  if (!matches || matches.length === 0) {
+    return text;
+  }
+
+  let output = [];
+  let rightText = text;
+  for (const m of matches) {
+    if (rightText.includes(m)) {
+      const [left, right] = rightText.split(m);
+
+      output.push(left);
+      output.push(<strong>{m}</strong>);
+      rightText = right;
+    }
+  }
+
+  if (rightText.length) {
+    output.push(rightText);
+  }
+
+  return output;
+}
+
 function InstructionBlock({
   value,
   step,
@@ -24,14 +51,16 @@ function InstructionBlock({
     setIsCompleted((prev) => !prev);
   };
 
-  const matches = value.match(regexValue);
+  const decodedText = he.decode(value as string);
+
+  const matches = decodedText.match(regexValue);
   return (
     <>
       <li
         className={`cs-step rounded hover:bg-base-300 ${isCompleted && "opacity-30"} cursor-pointer`}
         onClick={handleIsCompleted}
       >
-        {he.decode(value as string)}
+        <span>{formatDecodedText(decodedText, matches)}</span>
       </li>
       {matches && matches?.length > 0 && (
         <div className="ml-12 flex flex-row flex-wrap gap-2">
