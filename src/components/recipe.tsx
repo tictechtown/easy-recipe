@@ -1,5 +1,6 @@
 import he from "he";
 import { Duration } from "luxon";
+import Link from "next/link";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
 import {
   convertToArrayIfNeeded,
@@ -142,7 +143,22 @@ export default function Recipe({ data, onRemove, onUpdateMultiplier }: Props) {
   const brandLogo = parseBrandLogo(recipe.publisher);
 
   return (
-    <div className="container flex max-w-4xl animate-fade-in-move-down flex-col gap-4 py-4 md:gap-8 md:py-8">
+    <div className="container flex max-w-4xl animate-fade-in-move-down flex-col gap-4 pb-4 md:gap-8 md:pb-8">
+      <div className="flex flex-none">
+        <Link href={`/recipes/`}>
+          <div className="flex flex-none flex-row content-center gap-2 hover:underline">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+              className="w-4"
+            >
+              <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+            </svg>
+            Back
+          </div>
+        </Link>
+      </div>
+
       <img
         className="max-h-96 rounded-3xl object-cover  px-2 lg:px-0"
         src={imageUrl}
