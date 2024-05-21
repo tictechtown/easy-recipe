@@ -2,6 +2,7 @@
 import useAvailableRecipes from "@/hooks/useAvailableRecipes";
 import useHydration from "@/hooks/useHydration";
 import useRecipeImport from "@/hooks/useRecipeImport";
+import supabase from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecipeListStore } from "../store/localStore";
@@ -18,6 +19,17 @@ export default function Home() {
       router.push("/recipes");
     }
   }, [router, recipes]);
+
+  const handleSignIn = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: process.env.NEXT_PUBLIC_VERCEL_URL
+          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+          : "http://localhost:3000",
+      },
+    });
+  };
 
   if (!isHydrated) {
     return <main className="hero min-h-screen bg-base-200"></main>;
@@ -70,6 +82,13 @@ export default function Home() {
               Error importing the recipe
             </span>
           )}
+
+          <div className="mt-12">
+            Already having an account?
+            <button className="btn btn-link" onClick={handleSignIn}>
+              Sign in
+            </button>
+          </div>
         </div>
       </div>
     </main>
