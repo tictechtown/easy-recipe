@@ -1,6 +1,8 @@
 "use client";
+import useAvailableRecipes from "@/hooks/useAvailableRecipes";
 import useHydration from "@/hooks/useHydration";
 import useRecipeImport from "@/hooks/useRecipeImport";
+import supabase from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecipeListStore } from "../store/localStore";
@@ -8,14 +10,26 @@ import { useRecipeListStore } from "../store/localStore";
 export default function Home() {
   const router = useRouter();
   const isHydrated = useHydration();
-  const { importedRecipes, addRecipe } = useRecipeListStore((state) => state);
+  const { addRecipe } = useRecipeListStore((state) => state);
+  const recipes = useAvailableRecipes();
   const [text, setText] = useState("");
   const [handleRecipeImport, loading, showError] = useRecipeImport(addRecipe);
   useEffect(() => {
-    if (importedRecipes.length > 0) {
+    if (recipes.length > 0) {
       router.push("/recipes");
     }
-  }, [router, importedRecipes]);
+  }, [router, recipes]);
+
+  const handleSignIn = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: process.env.NEXT_PUBLIC_VERCEL_URL
+          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+          : "http://localhost:3000",
+      },
+    });
+  };
 
   if (!isHydrated) {
     return <main className="hero min-h-screen bg-base-200"></main>;
@@ -68,6 +82,13 @@ export default function Home() {
               Error importing the recipe
             </span>
           )}
+
+          <div className="mt-12">
+            Already having an account?
+            <button className="btn btn-link" onClick={handleSignIn}>
+              Sign in
+            </button>
+          </div>
         </div>
       </div>
     </main>

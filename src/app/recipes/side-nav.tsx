@@ -1,3 +1,4 @@
+import SignedUserButton from "@/components/signed-user-btn";
 import { StoredRecipe } from "@/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,7 +22,6 @@ export default function SideNav({
   const pathname = usePathname();
 
   const handleSideNavBlur = () => {
-    console.log(document.getElementById("small-drawer-btn")?.style.display);
     if (document.getElementById("small-drawer-btn")?.style.display !== "none") {
       (document.getElementById("drawer-nav") as HTMLInputElement).checked =
         false;
@@ -90,7 +90,7 @@ export default function SideNav({
 
       <h4 className="mt-6 text-lg font-bold">History</h4>
 
-      <ul className="mt-2">
+      <ul className="mt-2 grow">
         {/* Sidebar content here */}
 
         {loading && <li>Importing...</li>}
@@ -120,6 +120,8 @@ export default function SideNav({
           </li>
         ))}
       </ul>
+
+      <SignedUserButton />
     </>
   );
 }

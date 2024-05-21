@@ -1,6 +1,7 @@
 import { Duration } from "luxon";
 import { parseIngredient } from "parse-ingredient";
-import { ImageLD, RecipeLD, StoredRecipe } from "../types";
+import slugify from "slugify";
+import { ImageLD, RecipeLD, StoredRecipe, SupaRecipe } from "../types";
 
 export function round5(x: number) {
   return Math.ceil(x / 5) * 5;
@@ -116,4 +117,74 @@ export function convertToArrayIfNeeded<T>(value: T | T[]): T[] {
     return value.split(", ") as T[];
   }
   return [value];
+}
+
+export function convertStoreRecipeToSupaRecipe(
+  recipe: StoredRecipe,
+  userId: string,
+): Partial<SupaRecipe> {
+  const rcp: Partial<SupaRecipe> = {
+    id: recipe.supaId ?? undefined,
+    user_id: userId,
+    added_at: recipe.addedAt
+      ? new Date(recipe.updatedAt).toISOString()
+      : undefined,
+    updated_at: recipe.updatedAt
+      ? new Date(recipe.updatedAt).toISOString()
+      : undefined,
+    deleted_at: recipe.deletedAt
+      ? new Date(recipe.updatedAt).toISOString()
+      : undefined,
+    blob: JSON.stringify(recipe.recipe),
+    multiplier: recipe.multiplier,
+    favorite: recipe.favorite,
+  };
+
+  if (!rcp.id) {
+    delete rcp["id"];
+  }
+
+  if (!rcp.updated_at) {
+    delete rcp["updated_at"];
+  }
+
+  if (!rcp.deleted_at) {
+    delete rcp["deleted_at"];
+  }
+
+  return rcp;
+}
+
+export function convertSupaRecipeToLocalRecipe(
+  supaRecipe: SupaRecipe,
+): StoredRecipe {
+  const recipeLD = JSON.parse(supaRecipe.blob);
+  const newId = slugify(recipeLD.name);
+  return {
+    id: newId,
+    supaId: supaRecipe.id,
+    recipe: recipeLD,
+    updatedAt: Date.parse(supaRecipe.updated_at),
+    addedAt: Date.parse(supaRecipe.added_at),
+    favorite: supaRecipe.favorite ?? false,
+    multiplier: supaRecipe.multiplier ? supaRecipe.multiplier : undefined,
+    deletedAt: supaRecipe.deleted_at
+      ? Date.parse(supaRecipe.deleted_at)
+      : undefined,
+  };
+}
+
+export function convertRecipeLDToLocalRecipe(
+  recipeLD: RecipeLD,
+  url: string,
+): StoredRecipe {
+  const newId = slugify(recipeLD.name);
+  return {
+    recipe: { ...recipeLD, url },
+    id: newId,
+    supaId: null,
+    addedAt: Date.now(),
+    updatedAt: Date.now(),
+    favorite: false,
+  };
 }

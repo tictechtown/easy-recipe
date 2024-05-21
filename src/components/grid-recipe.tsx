@@ -10,6 +10,13 @@ export default function GridRecipe({ data, onRemove }: Props) {
   const { recipe } = data;
   const imageUrl = parseRecipeImage(recipe.image);
 
+  const handleRemove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+    onRemove(data);
+  };
+
   return (
     <div className="card card-side card-compact h-full flex-row bg-base-200 sm:flex-col sm:rounded-t-md">
       <figure className="sm:rounded-none sm:rounded-t-xl">
@@ -23,7 +30,7 @@ export default function GridRecipe({ data, onRemove }: Props) {
         <h6 className="card-title text-sm text-primary">{recipe.name}</h6>
       </div>
       <div
-        onClick={(e) => onRemove(data)}
+        onClick={handleRemove}
         className="card-actions items-center justify-center rounded-r-xl bg-base-300 px-8"
       >
         <svg
