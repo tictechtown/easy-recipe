@@ -11,6 +11,11 @@ export default function SignedUserButton() {
     setLoading(true);
     await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        redirectTo: process.env.NEXT_PUBLIC_VERCEL_URL
+          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+          : "http://localhost:3000",
+      },
     });
     const { data, error } = await supabase.from("sync").select();
     console.log("fetching last sync", data, error);
