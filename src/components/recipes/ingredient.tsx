@@ -5,6 +5,7 @@ const formattedMap: Record<string, string> = {
   ounce: "oz",
   tablespoon: "tbsp",
   teaspoon: "tsp",
+  kilogram: "kg",
   gram: "g",
 };
 

@@ -1,7 +1,7 @@
 import he from "he";
 import { Duration } from "luxon";
 import Link from "next/link";
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { useState } from "react";
 import {
   convertToArrayIfNeeded,
   parseBrandLogo,
@@ -16,6 +16,7 @@ import Clock from "./recipes/clock";
 import IngredientCard from "./recipes/ingredient-card";
 import RecipeInstructions from "./recipes/instructions";
 import Ratings from "./recipes/ratings";
+import YieldModal from "./yield-modal";
 
 type Props = {
   data: StoredRecipe;
@@ -32,49 +33,12 @@ type RecipeTimer = {
 export default function Recipe({ data, onRemove, onUpdateMultiplier }: Props) {
   const { recipe } = data;
   const [multiplier, setMultiplier] = useState(data.multiplier ?? 1);
-  const [showStepper, setShowStepper] = useState(false);
   const [timers, setTimers] = useState<RecipeTimer[]>([]);
   const recipeYield = parseRecipeYield(recipe.recipeYield);
 
-  const handleShowStepper = () => {
-    setShowStepper((prev) => !prev);
-  };
-
-  const handleForceShowStepper = () => {
-    if (!showStepper) {
-      setShowStepper(() => true);
-    }
-  };
-
-  const handleKeyDown = (event: KeyboardEvent<any>) => {
-    if (event.defaultPrevented) {
-      return; // Do nothing if the event was already processed
-    }
-
-    switch (event.key) {
-      case "Enter":
-        // Do something for "enter" or "return" key press.
-        setShowStepper(false);
-        break;
-      case "Escape":
-        // Do something for "esc" key press.
-        setShowStepper(false);
-        break;
-      default:
-        return; // Quit when this doesn't handle the key event.
-    }
-
-    // Cancel the default action to avoid it being handled twice
-    event.preventDefault();
-  };
-
-  const handleMultiplierChange = (e: ChangeEvent<any>) => {
-    onUpdateMultiplier(data, +e.target.value / recipeYield); // this update the saved value
-    setMultiplier(+e.target.value / recipeYield);
-  };
-
-  const handleMultiplierBlur = () => {
-    setShowStepper(false);
+  const handleMultiplierChange = (value: number) => {
+    onUpdateMultiplier(data, value / recipeYield); // this update the saved value
+    setMultiplier(value / recipeYield);
   };
 
   const handleAddTimer = (stepName: string, durationInMS: number) => {
@@ -111,6 +75,10 @@ export default function Recipe({ data, onRemove, onUpdateMultiplier }: Props) {
   const handleReset = () => {
     onUpdateMultiplier(data, 1); // this update the saved value
     setMultiplier(1);
+  };
+
+  const handleShowStepper = () => {
+    (document.getElementById("yield-modal") as HTMLDialogElement).showModal();
   };
 
   const recipeIngredient = Array.isArray(recipe.recipeIngredient)
@@ -152,7 +120,10 @@ export default function Recipe({ data, onRemove, onUpdateMultiplier }: Props) {
               viewBox="0 0 448 512"
               className="w-4"
             >
-              <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+              <path
+                fill="currentColor"
+                d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"
+              />
             </svg>
             Back
           </div>
@@ -280,59 +251,30 @@ export default function Recipe({ data, onRemove, onUpdateMultiplier }: Props) {
             </div>
           )}
 
-          <div className="stat overflow-hidden">
+          <div className="stat">
             <div className="md:text-md stat-title text-sm">Yield</div>
             <div
               className="stat-value text-2xl md:text-3xl"
-              onClick={handleForceShowStepper}
-            >
-              {showStepper ? (
-                <input
-                  type="number"
-                  min={1}
-                  placeholder={`${recipeYield}`}
-                  className="focus-ring input w-16"
-                  onKeyDown={handleKeyDown}
-                  onChange={handleMultiplierChange}
-                  onBlur={handleMultiplierBlur}
-                />
-              ) : (
-                <span>{recipeYield * multiplier}</span>
-              )}
-            </div>
-            <div
-              className="stat-figure cursor-pointer text-primary"
               onClick={handleShowStepper}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                className="inline-block h-8 w-8 stroke-current"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                ></path>
-              </svg>
-            </div>
-            <div className="">
-              {multiplier !== 1.0 && (
-                <button className="btn btn-link" onClick={handleReset}>
-                  Reset
-                </button>
-              )}
+              <span>{recipeYield * multiplier}</span>
             </div>
           </div>
         </div>
       </div>
 
+      <YieldModal
+        value={multiplier * recipeYield}
+        onUpdate={handleMultiplierChange}
+        onReset={handleReset}
+        showReset={multiplier !== 1}
+      />
+
       <div className="flex flex-col gap-4 md:flex-row md:gap-2 lg:gap-12	">
         <IngredientCard
           ingredients={recipeIngredient}
           multiplier={multiplier}
+          onShowStepper={handleShowStepper}
         />
 
         <div className="prose card card-compact mx-4  bg-base-200 sm:card-normal sm:basis-3/5 lg:mx-auto">
